@@ -18,7 +18,7 @@ class Cenario(GameElement):
     
     
     def __init__(self, tela):
-        self.estado = 'MENU PRINCIPAL'
+        self.state = 'MENU PRINCIPAL'
         self.nivel = 1
         self.objeto_matriz = Matriz(self.nivel)
         self.matriz = self.objeto_matriz.get_matriz()
@@ -51,29 +51,29 @@ class Cenario(GameElement):
     def calculate_rules(self, mouse: tuple):
         for button in self.buttons:
             button.calculate_rules(mouse[1])
-        if self.estado == 'JOGANDO':
+        if self.state == 'JOGANDO':
             for button in self.buttons:
                 button.calculate_rules(mouse[1])
             if len(self.moviveis) <= 1:
-                self.estado = 'PASSANDO NIVEL'
+                self.state = 'PASSANDO NIVEL'
                 self.tempo_que_passou = time()
             else:
                 for movivel in self.moviveis:
                     movivel.calcular_regras()
                     self.calcula_regras_jogando(movivel)
-        elif self.estado == 'PASSANDO NIVEL' and self.ja_passou_o_tempo:
+        elif self.state == 'PASSANDO NIVEL' and self.ja_passou_o_tempo:
             for button in self.buttons:
                 button.calculate_rules(mouse[1])
             self.passa_o_nivel()
-        elif self.estado == 'MORTO' and self.ja_passou_o_tempo:
+        elif self.state == 'DEAD' and self.ja_passou_o_tempo:
             for button in self.buttons:
                 button.calculate_rules(mouse[1])
             self.reinicia_o_nivel()
-        elif self.estado == 'MENU PRINCIPAL':
+        elif self.state == 'MENU PRINCIPAL':
             self.menu.calculate_rules(mouse)
             
     def calcula_regras_jogando(self, movivel):
-        if movivel.estado == 'VIVO':
+        if movivel.state == 'ALIVE':
             
             for bala in movivel.weapon.fired_bullets:
                 for _movivel in self.moviveis:
@@ -111,13 +111,13 @@ class Cenario(GameElement):
                     movivel.recusar_movimento()
             else:
                 movivel.aceitar_movimento()
-        elif movivel.estado == 'MORTO':
+        elif movivel.state == 'DEAD':
             if isinstance(movivel, Inimigo):
                 self.moviveis.remove(movivel)
                 self.score_manager.add_points(movivel.recompensa)
                 del movivel
             elif isinstance(movivel, Personagem):
-                self.estado = 'MORTO'
+                self.state = 'DEAD'
                 self.tempo_que_passou = time()
         
     def colide_com_parede(self, movivel):
@@ -142,33 +142,33 @@ class Cenario(GameElement):
         direcoes = []
         
         if self.matriz[int(linha - 1)][int(coluna)] not in self.paredes:
-            direcoes.append('NORTE')
+            direcoes.append('NORTH')
             
         if self.matriz[int(linha + 1)][int(coluna)] not in self.paredes:
-            direcoes.append('SUL')
+            direcoes.append('SOUTH')
             
         if self.matriz[int(linha)][int(coluna - 1)] not in self.paredes:
-            direcoes.append('OESTE')
+            direcoes.append('WEST')
             
         if self.matriz[int(linha)][int(coluna + 1)] not in self.paredes:
-            direcoes.append('LESTE')
+            direcoes.append('EAST')
             
         if self.matriz[int(linha - 1)][int(coluna + 1)] not in self.paredes:
-            direcoes.append('NORDESTE')
+            direcoes.append('NORTH EAST')
             
         if self.matriz[int(linha - 1)][int(coluna - 1)] not in self.paredes:
-            direcoes.append('NOROESTE')
+            direcoes.append('NORTH WEST')
             
         if self.matriz[int(linha + 1)][int(coluna + 1)] not in self.paredes:
-            direcoes.append('SUDESTE')
+            direcoes.append('SOUTH EAST')
             
         if self.matriz[int(linha + 1)][int(coluna - 1)] not in self.paredes:
-            direcoes.append('SUDOESTE')
+            direcoes.append('SOUTH WEST')
             
         return direcoes
     
     def state_changer(self, new_state: str):
-        self.estado = new_state
+        self.state = new_state
     
     '''processamento de eventos'''
     
@@ -177,18 +177,18 @@ class Cenario(GameElement):
             if e.type == pygame.QUIT:
                 self.score_manager.save_score()
                 exit()
-            elif self.estado == 'MENU PRINCIPAL' and e.type == pygame.MOUSEBUTTONDOWN:
+            elif self.state == 'MENU PRINCIPAL' and e.type == pygame.MOUSEBUTTONDOWN:
                 self.menu.processa_eventos(e, mouse)
                 if self.menu.allowed_to_play():
                     weapon = self.menu.get_gun()(self.tela)
                     self.personagem.receive_weapon(weapon)
                     self.menu.reset()
                     self.inicia_o_nivel()
-            elif self.estado == 'JOGANDO':
+            elif self.state == 'JOGANDO':
                 for button in self.buttons:
                     button.process_events(e, mouse)
                 self.processar_eventos_jogando(e, teclado, mouse)
-            elif self.estado == 'PAUSADO':
+            elif self.state == 'PAUSADO':
                 for button in self.buttons:
                     button.process_events(e, mouse)
                 self.processar_eventos_pausado(e)
@@ -200,7 +200,7 @@ class Cenario(GameElement):
             esc = pygame.K_ESCAPE
             
             if tecla == esc:
-                self.estado = 'PAUSADO'
+                self.state = 'PAUSADO'
                 
         for movivel in self.moviveis:
             if isinstance(movivel, Personagem):
@@ -212,22 +212,22 @@ class Cenario(GameElement):
         esc_pressionado = evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE
         
         if esc_pressionado:
-            self.estado = 'JOGANDO'
+            self.state = 'JOGANDO'
                     
     '''pintura'''
                                
     def paint(self):
-        if self.estado == 'MENU PRINCIPAL':
+        if self.state == 'MENU PRINCIPAL':
             self.pintar_menu_principal()
-        elif self.estado == 'JOGANDO':
+        elif self.state == 'JOGANDO':
             self.pintar_jogando()
-        elif self.estado == 'PAUSADO':
+        elif self.state == 'PAUSADO':
             self.pintar_pausado()
-        elif self.estado == 'PASSANDO NIVEL':
+        elif self.state == 'PASSANDO NIVEL':
             self.pintar_passagem_nivel()
-        elif self.estado == 'MORTO':
-            self.pintar_morto()
-        elif self.estado == 'VITORIA':
+        elif self.state == 'DEAD':
+            self.pintar_DEAD()
+        elif self.state == 'VITORIA':
             self.pintar_vitoria()
         
             
@@ -282,7 +282,7 @@ class Cenario(GameElement):
         pygame.draw.rect(self.tela, cores.AMARELO, (650, 425, 200, 50))
         self.pintar_texto('VOLTAR AO MENU PRINCIPAL', 750, 450, fonte_50, cores.BRANCO)
     
-    def pintar_morto(self):
+    def pintar_DEAD(self):
         mensagem = 'VOCÊ MORREU... :('
         mensagem_2 = 'VAI TER QUE COMEÇAR O NÍVEL NOVAMENTE... :/'
         self.pintar_texto(mensagem, 750, 425, fonte_50, cores.BRANCO)
@@ -327,7 +327,7 @@ class Cenario(GameElement):
         self.blocos_na_matriz = self.objeto_matriz.get_numero_blocos()
         self.instanciamento_moviveis()
         self.define_fps()
-        self.estado = 'JOGANDO'
+        self.state = 'JOGANDO'
         
     def passa_o_nivel(self):
         self.nivel += 1

@@ -15,14 +15,14 @@ class Movivel(metaclass=ABCMeta):
         self.y_intencao = self.y
             
     def calcular_regras(self):
-        if self.estado == 'ALIVE':
+        if self.state == 'ALIVE':
             self.calcular_regras_ALIVE()
             if self.hp <= 0:
-                self.estado = 'DEAD'
+                self.state = 'DEAD'
             
     def calcular_regras_ALIVE(self):
-        self.x_intencao = self.x + self.vel_x
-        self.y_intencao = self.y + self.vel_y
+        self.x_intencao = self.x + self.x_speed
+        self.y_intencao = self.y + self.y_speed
         self.linha = self.y // self.size
         self.coluna = (self.x - 300) // self.size
             

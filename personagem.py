@@ -17,28 +17,28 @@ class Personagem(Movivel):
         self.max_hp = 100
         self.hp = 100
         self.weapon = None
-        self.direction = 'NORTE'
-        self.state = 'VIVO'
+        self.direction = 'NORTH'
+        self.state = 'ALIVE'
         self.time_passed_since_death = None
         self.time_passed = 0
         self.size = None
 
     def pintar(self):
         pygame.draw.rect(self.screen, cores.CIANO, (self.x, self.y, self.size, self.size))
-        self.pintar_vida()
+        self.paint_hp()
         self.weapon.paint(self.size, True)
         
     def paint_hp(self):
         hp = f'HP: {self.hp}'
         hp_render = fonte_30.render(hp, True, cores.BRANCO)
         width_to_center = hp_render.get_width() / 2
-        self.screen.blit(hp, (1350 - width_to_center, 750))
+        self.screen.blit(hp_render, (1350 - width_to_center, 750))
         
     def reinicia_stats(self):
         self.hp = 100
         self.weapon.reinit_stats()
-        self.state = 'VIVO'
-        self.direction = 'NORTE'
+        self.state = 'ALIVE'
+        self.direction = 'NORTH'
     
     def processar_eventos(self, evento, teclado, mouse):
         w = pygame.K_w
@@ -52,21 +52,21 @@ class Personagem(Movivel):
         d_pressionado = bool(teclado[d])
             
         if w_pressionado and a_pressionado:
-            self.y_speed = -self.velocidade
-            self.x_speed = -self.velocidade
-            self.direction = 'NOROESTE'
+            self.y_speed = -self.SPEED
+            self.x_speed = -self.SPEED
+            self.direction = 'NORTH WEST'
         elif w_pressionado and d_pressionado:
-            self.y_speed = -self.velocidade
-            self.x_speed = self.velocidade
-            self.direction = 'NORDESTE'
+            self.y_speed = -self.SPEED
+            self.x_speed = self.SPEED
+            self.direction = 'NORTH EAST'
         elif s_pressionado and a_pressionado:
-            self.y_speed = self.velocidade
-            self.x_speed = -self.velocidade
-            self.direction = 'SUDOESTE'
+            self.y_speed = self.SPEED
+            self.x_speed = -self.SPEED
+            self.direction = 'SOUTH WEST'
         elif s_pressionado and d_pressionado:
-            self.y_speed = self.velocidade
-            self.x_speed = self.velocidade
-            self.direction = 'SUDESTE'
+            self.y_speed = self.SPEED
+            self.x_speed = self.SPEED
+            self.direction = 'SOUTH EAST'
         elif s_pressionado and w_pressionado:
             self.y_speed = 0
         elif a_pressionado and d_pressionado:
@@ -74,16 +74,16 @@ class Personagem(Movivel):
             
         elif w_pressionado:
             self.y_speed = -self.SPEED
-            self.direction = 'NORTE'
+            self.direction = 'NORTH'
         elif a_pressionado:
             self.x_speed = -self.SPEED
-            self.direction = 'OESTE'
+            self.direction = 'WEST'
         elif s_pressionado:
             self.y_speed = self.SPEED
-            self.direction = 'SUL'
+            self.direction = 'SOUTH'
         elif d_pressionado:
             self.x_speed = self.SPEED
-            self.direction = 'LESTE'
+            self.direction = 'EAST'
             
         tecla_solta = evento.type == pygame.KEYUP   
         if tecla_solta:
