@@ -1,0 +1,5 @@
+__pycache__/
+.venv/
+files/*.json
+files/*.txt
+files/test.py
