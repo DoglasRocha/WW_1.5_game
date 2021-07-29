@@ -178,7 +178,7 @@ class Cenario(GameElement):
                 self.score_manager.save_score()
                 exit()
             elif self.state == 'MENU PRINCIPAL' and e.type == pygame.MOUSEBUTTONDOWN:
-                self.menu.processa_eventos(e, mouse)
+                self.menu.process_events(e, mouse)
                 if self.menu.allowed_to_play():
                     weapon = self.menu.get_gun()(self.tela)
                     self.personagem.receive_weapon(weapon)
@@ -247,7 +247,7 @@ class Cenario(GameElement):
             pygame.draw.rect(self.tela, color, (x, y, self.tamanho, self.tamanho))
 
     def pintar_menu_principal(self):
-        self.menu.pintar()
+        self.menu.paint()
 
     def pintar_texto(self, texto, x, y, fonte, cor):
         render = fonte.render(texto, True, cor)
@@ -259,7 +259,7 @@ class Cenario(GameElement):
         for numero_linha, linha in enumerate(self.matriz):
             self.pintar_linha(numero_linha, linha)
         for movivel in self.moviveis:
-            movivel.pintar()
+            movivel.paint()
         self.paint_side_bar()
         for button in self.buttons:
             button.paint()

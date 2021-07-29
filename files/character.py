@@ -1,15 +1,16 @@
 from guns import Weapon
 from pygame import Surface
-import pygame
 import cores
 from movivel import Movivel
-from time import time
+from pygame.event import Event
+import pygame
 
 fonte_30 = pygame.font.SysFont('arial', 30, True)
 
-class Personagem(Movivel):
+class Character(Movivel):
     
-    def __init__(self, screen: Surface):
+    
+    def __init__(self, screen: Surface) -> None:
         self.SPEED = 1
         self.x_speed = 0
         self.y_speed = 0
@@ -23,78 +24,90 @@ class Personagem(Movivel):
         self.time_passed = 0
         self.size = None
 
-    def pintar(self):
+    def paint(self) -> None:
         pygame.draw.rect(self.screen, cores.CIANO, (self.x, self.y, self.size, self.size))
         self.paint_hp()
         self.weapon.paint(self.size, True)
         
-    def paint_hp(self):
+    def paint_hp(self) -> None:
         hp = f'HP: {self.hp}'
         hp_render = fonte_30.render(hp, True, cores.BRANCO)
         width_to_center = hp_render.get_width() / 2
         self.screen.blit(hp_render, (1350 - width_to_center, 750))
         
-    def reinicia_stats(self):
+    def reinit_stats(self) -> None:
         self.hp = 100
         self.weapon.reinit_stats()
         self.state = 'ALIVE'
         self.direction = 'NORTH'
     
-    def processar_eventos(self, evento, teclado, mouse):
+    def processar_eventos(self, event: Event, keyboard: tuple, mouse: tuple) -> None:
+        key_up = event.type == pygame.KEYUP
+        
         w = pygame.K_w
         a = pygame.K_a
         s = pygame.K_s
         d = pygame.K_d
         
-        w_pressionado = bool(teclado[w])
-        a_pressionado = bool(teclado[a])
-        s_pressionado = bool(teclado[s])
-        d_pressionado = bool(teclado[d])
+        w_pressed = bool(keyboard[w])
+        a_pressed = bool(keyboard[a])
+        s_pressed = bool(keyboard[s])
+        d_pressed = bool(keyboard[d])
             
-        if w_pressionado and a_pressionado:
+        if w_pressed and a_pressed:
             self.y_speed = -self.SPEED
             self.x_speed = -self.SPEED
             self.direction = 'NORTH WEST'
-        elif w_pressionado and d_pressionado:
+            
+        elif w_pressed and d_pressed:
             self.y_speed = -self.SPEED
             self.x_speed = self.SPEED
             self.direction = 'NORTH EAST'
-        elif s_pressionado and a_pressionado:
+            
+        elif s_pressed and a_pressed:
             self.y_speed = self.SPEED
             self.x_speed = -self.SPEED
             self.direction = 'SOUTH WEST'
-        elif s_pressionado and d_pressionado:
+            
+        elif s_pressed and d_pressed:
             self.y_speed = self.SPEED
             self.x_speed = self.SPEED
             self.direction = 'SOUTH EAST'
-        elif s_pressionado and w_pressionado:
+            
+        elif s_pressed and w_pressed:
             self.y_speed = 0
-        elif a_pressionado and d_pressionado:
+            
+        elif a_pressed and d_pressed:
             self.x_speed = 0
             
-        elif w_pressionado:
+        elif w_pressed:
             self.y_speed = -self.SPEED
             self.direction = 'NORTH'
-        elif a_pressionado:
+            
+        elif a_pressed:
             self.x_speed = -self.SPEED
             self.direction = 'WEST'
-        elif s_pressionado:
+            
+        elif s_pressed:
             self.y_speed = self.SPEED
             self.direction = 'SOUTH'
-        elif d_pressionado:
+            
+        elif d_pressed:
             self.x_speed = self.SPEED
             self.direction = 'EAST'
-            
-        tecla_solta = evento.type == pygame.KEYUP   
-        if tecla_solta:
-            tecla = evento.key
-            if tecla == w:
+               
+        if key_up:
+            key = event.key            
+            if key == w:
                 self.y_speed = 0
-            if tecla == a:
+                
+            if key == a:
                 self.x_speed = 0
-            if tecla == s:
+                
+            if key == s:
                 self.y_speed = 0
-            if tecla == d:
+                
+            if key == d:
                 self.x_speed = 0
         
         if any(mouse[0]):

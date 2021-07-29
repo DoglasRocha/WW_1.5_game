@@ -2,6 +2,7 @@ from weapon_selector_screen import WeaponSelectorScreen
 from credits_screen import CreditsScreen
 from main_menu_screen import MainMenuScreen
 from pygame import QUIT, Surface
+from pygame.event import Event
 from guns import Weapon
 
 
@@ -21,13 +22,13 @@ class MainMenu:
                                          'EXITING': exit}
         
     '''PAINTING'''
-    def pintar(self):
+    def paint(self) -> None:
         painting = self.screen_selector_by_state[self.state]
         if painting != exit: 
             painting.paint()
         
     '''EVENT PROCESSOR'''    
-    def processa_eventos(self, evento, mouse):
+    def process_events(self, evento: Event, mouse: tuple) -> None:
         event_processor = self.screen_selector_by_state[self.state]
         
         if evento.type == QUIT or event_processor == exit:
@@ -47,7 +48,7 @@ class MainMenu:
             ruler()
         
     '''AUXILIARY METHODS'''
-    def allowed_to_play(self):
+    def allowed_to_play(self) -> None:
         return self.state == 'PLAYING'
             
     def gun_receiver(self, gun: Weapon) -> None:
@@ -56,9 +57,9 @@ class MainMenu:
     def reset(self) -> None:
         self.state = 'MENU'
         
-    def change_state(self, new_state: str):
+    def change_state(self, new_state: str) -> None:
         self.state = new_state
 
-    def get_gun(self):
+    def get_gun(self) -> None:
         return self.gun
     

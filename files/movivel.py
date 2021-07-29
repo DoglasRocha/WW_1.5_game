@@ -89,5 +89,5 @@ class Movivel(metaclass=ABCMeta):
             self.hp += hp
         
     @abstractmethod
-    def pintar(self):
+    def paint(self):
         pass
