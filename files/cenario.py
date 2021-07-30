@@ -4,8 +4,8 @@ from pygame.event import Event
 import cores
 from score_manager import ScoreManager
 from game_element import GameElement
-from inimigos import Inimigo, Recruta, Soldado, Capitao, General
-from personagem import Personagem
+from enemies import Enemy, Recruit, Soldier, Capitain, General
+from character import Character
 from matriz import Matriz
 from time import time
 from main_menu import MainMenu
@@ -27,7 +27,7 @@ class Cenario(GameElement):
         self.paredes = self.objeto_matriz.get_paredes()
         self.tela = tela
         self.menu = MainMenu(self.tela)
-        self.personagem = Personagem(self.tela)
+        self.personagem = Character(self.tela)
         self.instanciamento_moviveis()
         self.clock = pygame.time.Clock()
         self.tempo_para_passar = 2.5
@@ -59,7 +59,7 @@ class Cenario(GameElement):
                 self.tempo_que_passou = time()
             else:
                 for movivel in self.moviveis:
-                    movivel.calcular_regras()
+                    movivel.calculate_rules()
                     self.calcula_regras_jogando(movivel)
         elif self.state == 'PASSANDO NIVEL' and self.ja_passou_o_tempo:
             for button in self.buttons:
@@ -104,19 +104,19 @@ class Cenario(GameElement):
                 self.objeto_matriz.clear_health_kit(movivel.linha, movivel.coluna)
                             
             if self.colide_com_parede(movivel) or self.colide_com_movivel(movivel):
-                if isinstance(movivel, Inimigo):
+                if isinstance(movivel, Enemy):
                     direcoes_possiveis = self.get_direcoes(movivel.linha, movivel.coluna)
-                    movivel.recusar_movimento(direcoes_possiveis)
+                    movivel.refuse_movement(direcoes_possiveis)
                 else:
-                    movivel.recusar_movimento()
+                    movivel.refuse_movement()
             else:
                 movivel.aceitar_movimento()
         elif movivel.state == 'DEAD':
-            if isinstance(movivel, Inimigo):
+            if isinstance(movivel, Enemy):
                 self.moviveis.remove(movivel)
-                self.score_manager.add_points(movivel.recompensa)
+                self.score_manager.add_points(movivel.reward)
                 del movivel
-            elif isinstance(movivel, Personagem):
+            elif isinstance(movivel, Character):
                 self.state = 'DEAD'
                 self.tempo_que_passou = time()
         
@@ -132,7 +132,7 @@ class Cenario(GameElement):
         colide_com_movivel = []
         for lin_intencao, col_intencao in movivel.hitbox:
             for _movivel in self.moviveis:
-                if id(movivel) != id(_movivel) and not isinstance(movivel, Inimigo):
+                if id(movivel) != id(_movivel) and not isinstance(movivel, Enemy):
                     colide = _movivel.linha == lin_intencao and _movivel.coluna == col_intencao
                     colide_com_movivel.append(colide)
                 
@@ -203,10 +203,10 @@ class Cenario(GameElement):
                 self.state = 'PAUSADO'
                 
         for movivel in self.moviveis:
-            if isinstance(movivel, Personagem):
-                movivel.processar_eventos(evento, teclado, mouse)
+            if isinstance(movivel, Character):
+                movivel.process_events(evento, teclado, mouse)
             else:
-                movivel.processar_eventos()
+                movivel.process_events()
         
     def processar_eventos_pausado(self, evento):
         esc_pressionado = evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE
@@ -320,7 +320,7 @@ class Cenario(GameElement):
     '''logica de niveis'''
     
     def inicia_o_nivel(self):
-        self.personagem.reinicia_stats()
+        self.personagem.reinit_stats()
         self.objeto_matriz = Matriz(self.nivel)
         self.matriz = self.objeto_matriz.get_matriz()
         self.tamanho = self.objeto_matriz.get_tamanho()
@@ -343,15 +343,15 @@ class Cenario(GameElement):
         self.moviveis = []
         self.moviveis.append(self.personagem)
         for i in range(int(self.nivel)):
-            self.moviveis.append(Recruta(self.tela, self.personagem))
+            self.moviveis.append(Recruit(self.tela, self.personagem))
         for i in range(int(self.nivel * 0.5)):
-            self.moviveis.append(Soldado(self.tela, self.personagem))
+            self.moviveis.append(Soldier(self.tela, self.personagem))
         for i in range(int(self.nivel * 0.2)):
-            self.moviveis.append(Capitao(self.tela, self.personagem))
+            self.moviveis.append(Capitain(self.tela, self.personagem))
         for i in range(int(self.nivel * 0.1)):
             self.moviveis.append(General(self.tela, self.personagem))
         for movivel in self.moviveis:
-            if isinstance(movivel, Personagem):
+            if isinstance(movivel, Character):
                 movivel.define_caracteristicas_geometricas(len(self.matriz[0]) - 2, len(self.matriz[0]) - 2, self.tamanho)
             else:
                 movivel.define_caracteristicas_geometricas(1, 1, self.tamanho)

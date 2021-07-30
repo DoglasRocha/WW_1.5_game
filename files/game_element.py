@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from pygame.event import Event
 
 class GameElement(metaclass=ABCMeta):
     
@@ -11,6 +12,6 @@ class GameElement(metaclass=ABCMeta):
         pass
     
     @abstractmethod
-    def process_events(self, events):
+    def process_events(self, event: Event):
         pass
     

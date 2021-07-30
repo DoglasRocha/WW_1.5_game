@@ -14,7 +14,7 @@ class Movivel(metaclass=ABCMeta):
         self.x_intencao = self.x
         self.y_intencao = self.y
             
-    def calcular_regras(self):
+    def calculate_rules(self):
         if self.state == 'ALIVE':
             self.calcular_regras_ALIVE()
             if self.hp <= 0:
@@ -53,7 +53,7 @@ class Movivel(metaclass=ABCMeta):
         self.x = self.x_intencao
         self.y = self.y_intencao
         
-    def recusar_movimento(self):
+    def refuse_movement(self):
         pass
     
     def analisar_tiro(self, bala, movivel):
@@ -90,4 +90,8 @@ class Movivel(metaclass=ABCMeta):
         
     @abstractmethod
     def paint(self):
+        pass
+    
+    @abstractmethod
+    def process_events(self):
         pass

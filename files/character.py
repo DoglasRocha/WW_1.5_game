@@ -41,7 +41,7 @@ class Character(Movivel):
         self.state = 'ALIVE'
         self.direction = 'NORTH'
     
-    def processar_eventos(self, event: Event, keyboard: tuple, mouse: tuple) -> None:
+    def process_events(self, event: Event, keyboard: tuple, mouse: tuple) -> None:
         key_up = event.type == pygame.KEYUP
         
         w = pygame.K_w
