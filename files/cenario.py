@@ -78,14 +78,14 @@ class Cenario(GameElement):
             for bala in movivel.weapon.fired_bullets:
                 for _movivel in self.moviveis:
                     if _movivel != movivel:
-                        _movivel.analisar_tiro(bala, movivel)
+                        _movivel.analyse_shot(bala, movivel)
                         
                 if self.colide_com_parede(bala):
                     bala.collided()
                     movivel.weapon.fired_bullets.remove(bala)
                     del bala
                     
-            column_where_the_movable_is = self.matriz[movivel.linha][movivel.coluna]
+            column_where_the_movable_is = self.matriz[movivel.line][movivel.column]
             if column_where_the_movable_is in (6,7,8,12):
                 damages_and_times = {6: (5, 5),
                                      7: (10, 5),
@@ -97,20 +97,20 @@ class Cenario(GameElement):
                     
             elif column_where_the_movable_is == 10:
                 movivel.receive_ammo(50)
-                self.objeto_matriz.clear_ammo(movivel.linha, movivel.coluna)
+                self.objeto_matriz.clear_ammo(movivel.line, movivel.column)
                         
             elif column_where_the_movable_is == 11:
                 movivel.gain_hp(50)
-                self.objeto_matriz.clear_health_kit(movivel.linha, movivel.coluna)
+                self.objeto_matriz.clear_health_kit(movivel.line, movivel.column)
                             
             if self.colide_com_parede(movivel) or self.colide_com_movivel(movivel):
                 if isinstance(movivel, Enemy):
-                    direcoes_possiveis = self.get_direcoes(movivel.linha, movivel.coluna)
+                    direcoes_possiveis = self.get_direcoes(movivel.line, movivel.column)
                     movivel.refuse_movement(direcoes_possiveis)
                 else:
                     movivel.refuse_movement()
             else:
-                movivel.aceitar_movimento()
+                movivel.accept_movement()
         elif movivel.state == 'DEAD':
             if isinstance(movivel, Enemy):
                 self.moviveis.remove(movivel)
@@ -133,7 +133,7 @@ class Cenario(GameElement):
         for lin_intencao, col_intencao in movivel.hitbox:
             for _movivel in self.moviveis:
                 if id(movivel) != id(_movivel) and not isinstance(movivel, Enemy):
-                    colide = _movivel.linha == lin_intencao and _movivel.coluna == col_intencao
+                    colide = _movivel.line == lin_intencao and _movivel.column == col_intencao
                     colide_com_movivel.append(colide)
                 
         return any(colide_com_movivel)
@@ -218,7 +218,7 @@ class Cenario(GameElement):
                                
     def paint(self):
         if self.state == 'MENU PRINCIPAL':
-            self.pintar_menu_principal()
+            self.menu.paint()
         elif self.state == 'JOGANDO':
             self.pintar_jogando()
         elif self.state == 'PAUSADO':
@@ -245,9 +245,6 @@ class Cenario(GameElement):
             color = all_colors[coluna]
             
             pygame.draw.rect(self.tela, color, (x, y, self.tamanho, self.tamanho))
-
-    def pintar_menu_principal(self):
-        self.menu.paint()
 
     def pintar_texto(self, texto, x, y, fonte, cor):
         render = fonte.render(texto, True, cor)
@@ -352,9 +349,9 @@ class Cenario(GameElement):
             self.moviveis.append(General(self.tela, self.personagem))
         for movivel in self.moviveis:
             if isinstance(movivel, Character):
-                movivel.define_caracteristicas_geometricas(len(self.matriz[0]) - 2, len(self.matriz[0]) - 2, self.tamanho)
+                movivel.define_geometric_stats(len(self.matriz[0]) - 2, len(self.matriz[0]) - 2, self.tamanho)
             else:
-                movivel.define_caracteristicas_geometricas(1, 1, self.tamanho)
+                movivel.define_geometric_stats(1, 1, self.tamanho)
     
     '''calculo dos fps'''
     def define_fps(self):

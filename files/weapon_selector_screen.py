@@ -25,6 +25,7 @@ class WeaponSelectorScreen(ScreenTemplate):
                              cores.BRANCO, cores.BRANCO, cores.PRETO,
                              font_15)
         self.buttons = [back_button]
+        
         self.gun_button_instanciation(screen, gun_receiver, state_changer)
             
     def gun_button_instanciation(self, screen: Surface,
@@ -40,6 +41,7 @@ class WeaponSelectorScreen(ScreenTemplate):
                                           screen, cores.BRANCO,
                                           cores.BRANCO, cores.BRANCO, 
                                           cores.PRETO, guns[i - 1]))
+            
         part_x = screen.get_width() // 3
         for i in range(2):
             x = part_x * (i + 1)

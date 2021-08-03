@@ -32,6 +32,7 @@ class Button(GameElement):
         self.font = font
         self.state = 'NOT FOCUSED'
 
+    '''processing events'''
     def process_events(self, event: Event, mouse: tuple) -> None:
         mouse_buttons_pressed = mouse[0]
         mouse_position = mouse[1]
@@ -41,6 +42,7 @@ class Button(GameElement):
                                             mouse_buttons_pressed):
             self.state_changer(self.new_state)
 
+    '''calculating rules'''
     def calculate_rules(self, mouse_position: tuple) -> None:
         if self.is_mouse_inside_the_button(mouse_position[0], mouse_position[1]):
             self.state = 'FOCUSED'
@@ -56,6 +58,7 @@ class Button(GameElement):
         return self.is_mouse_inside_the_button(x, y) and \
             any(mouse_buttons)
 
+    '''painting'''
     def paint(self):
         states_and_paintings = {'NOT FOCUSED': self.paint_not_focused,
                               'FOCUSED': self.paint_focused}

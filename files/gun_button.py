@@ -29,15 +29,16 @@ class GunButton(GameElement):
         self.gun = gun
         self.gun_instance = self.gun(self.screen)
         self.state = 'NOT FOCUSED'
-        self.renders = []
-        self.render_weapon(self.unfocused_text_color)
-        self.width = self.get_max_width() + 60
-        self.height = self.get_height() + 60
-        self.line_height = self.get_one_line_height()
-        self.weapon_name_height = self.get_weapon_name_height()
+        self.unfocused_render = self.render_weapon(self.unfocused_text_color)
+        self.focused_render = self.render_weapon(self.focused_text_color)
+        self.width = self.get_max_width(self.unfocused_render) + 60
+        self.height = self.get_height(self.unfocused_render) + 60
+        self.line_height = self.get_one_line_height(self.unfocused_render)
+        self.weapon_name_height = self.get_weapon_name_height(self.unfocused_render)
         self.x_rect = x - self.width // 2
         self.centered_y = y - self.height // 2
 
+    '''Processing events'''
     def process_events(self, event: Event, mouse: tuple) -> None:
         mouse_buttons_pressed, mouse_position = mouse
         x, y = mouse_position
@@ -47,6 +48,7 @@ class GunButton(GameElement):
             self.gun_receiver(self.gun)
             self.state_changer('PLAYING')
 
+    '''Calculating rules'''
     def calculate_rules(self, mouse_position: tuple) -> None:
         if self.is_mouse_inside_the_button(mouse_position[0], mouse_position[1]):
             self.state = 'FOCUSED'
@@ -62,6 +64,7 @@ class GunButton(GameElement):
         return self.is_mouse_inside_the_button(x, y) and \
             any(mouse_buttons)
 
+    '''Painting'''
     def paint(self) -> None:
         states_and_paintings = {'NOT FOCUSED': self.paint_not_focused,
                               'FOCUSED': self.paint_focused}
@@ -77,8 +80,7 @@ class GunButton(GameElement):
                           self.height),
                          border_radius=self.width // 25)
 
-        self.render_weapon(self.focused_text_color)
-        self.render_painter()
+        self.render_painter(self.focused_render)
 
     def paint_not_focused(self) -> None:
         pygame.draw.rect(self.screen, self.unfocused_border_color,
@@ -88,15 +90,14 @@ class GunButton(GameElement):
                           self.height), self.width // 25,
                          self.width // 25)
 
-        self.render_weapon(self.unfocused_text_color)
-        self.render_painter()
+        self.render_painter(self.unfocused_render)
                 
-    def render_painter(self) -> None:
+    def render_painter(self, renders: list) -> None:
         y = self.centered_y
         y += 20 + self.weapon_name_height // 2
         
-        for i in range(len(self.renders)):
-            render = self.renders[i]
+        for i in range(len(renders)):
+            render = renders[i]
             self.paint_centered_render(render, y)
             
             if i == 0:
@@ -111,7 +112,7 @@ class GunButton(GameElement):
         self.screen.blit(render, (self.x - cent_x, y_coordinate - cent_y))
         
     def render_weapon(self, text_color: tuple) -> None:
-        self.renders = []
+        renders = []
         
         nome = self.gun.__name__
         capacidade_municao = self.gun_instance.ammo_capacity
@@ -135,26 +136,28 @@ class GunButton(GameElement):
             lines[i] = lines[i].strip()
         
         render_nome_arma = font_50.render(nome, True, text_color)
-        self.renders.append(render_nome_arma)
+        renders.append(render_nome_arma)
         for line in lines: 
-            self.renders.append(font_20.render(line, True, text_color))
+            renders.append(font_20.render(line, True, text_color))
+            
+        return renders
     
-    def get_max_width(self) -> int:
-        render_widths = [render.get_width() for render in self.renders]
+    def get_max_width(self, renders: list) -> int:
+        render_widths = [render.get_width() for render in renders]
         
         return max(render_widths)
     
-    def get_height(self) -> int:
-        render_heights = [render.get_height() for render in self.renders]
+    def get_height(self, renders: list) -> int:
+        render_heights = [render.get_height() for render in renders]
         
         return sum(render_heights)
     
-    def get_one_line_height(self) -> int:
-        height = self.renders[1].get_height()
+    def get_one_line_height(self, renders: list) -> int:
+        height = renders[1].get_height()
         
         return height
         
-    def get_weapon_name_height(self) -> int:
-        height = self.renders[0].get_height()
+    def get_weapon_name_height(self, renders: list) -> int:
+        height = renders[0].get_height()
         
         return height

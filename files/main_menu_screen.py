@@ -14,12 +14,14 @@ class MainMenuScreen(ScreenTemplate):
         buttons_height = 125
         buttons_x = 750 - buttons_width // 2
         buttons_initial_y = 300
+        
         play_button = Button(buttons_x, buttons_initial_y, 
                              buttons_width, buttons_height, action,
                              'WEAPON SELECTOR',
                              screen, 'JOGAR', cores.BRANCO, 
                              cores.BRANCO, cores.BRANCO, cores.PRETO,
                              font_50)
+        
         buttons_y = buttons_initial_y + buttons_height + 25
         credits_button = Button(buttons_x, buttons_y, 
                           buttons_width, buttons_height, action,
@@ -27,6 +29,7 @@ class MainMenuScreen(ScreenTemplate):
                           screen, 'CRÉDITOS', cores.BRANCO, 
                           cores.BRANCO, cores.BRANCO, cores.PRETO,
                           font_50)
+        
         buttons_y += buttons_height + 25
         exit_button = Button(buttons_x, buttons_y, 
                              buttons_width, buttons_height, action,
@@ -34,5 +37,6 @@ class MainMenuScreen(ScreenTemplate):
                              screen, 'SAIR', cores.BRANCO, 
                              cores.BRANCO, cores.BRANCO, cores.PRETO,
                              font_50)
+        
         self.buttons = [play_button, credits_button, exit_button]
         

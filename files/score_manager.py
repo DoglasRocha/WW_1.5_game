@@ -11,6 +11,13 @@ class ScoreManager:
         self.all_scores = ScoreManager.__read_scores('five_biggest_scores.json')
         self.five_biggest_scores = self.five_biggest_scores_organizer()
         
+    def re_init(self):
+        self.general_score = 0.0
+        self.level_score = 0.0
+        self.attempt = 1
+        self.all_scores = ScoreManager.__read_scores('five_biggest_scores.json')
+        self.five_biggest_scores = self.five_biggest_scores_organizer()
+        
     def add_points(self, points: int) -> float:
         real_points = points / self.attempt
         self.level_score += real_points
@@ -26,10 +33,10 @@ class ScoreManager:
     @staticmethod
     def __read_scores(file: str) -> dict:
         try:
-            with open(file, 'r') as f:
+            with open('files/' + file, 'r') as f:
                 scores = json.load(f)
         except FileNotFoundError:
-            with open(file, 'w') as f:
+            with open('files/' + file, 'w') as f:
                 json.dump({}, f)
                 scores = {}
         
@@ -91,8 +98,10 @@ class ScoreManager:
             
             self.all_scores[formated_date] = self.general_score
             
-            with open('five_biggest_scores.json', 'w') as f:
+            with open('files/five_biggest_scores.json', 'w') as f:
                 json.dump(self.all_scores, f)
+                
+            self.re_init()
     
     def get_general_score(self) -> float:
         return self.general_score
@@ -105,3 +114,5 @@ class ScoreManager:
     
     def get_five_biggest_scores(self) -> dict:
         return self.five_biggest_scores
+
+    

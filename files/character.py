@@ -1,13 +1,13 @@
 from guns import Weapon
 from pygame import Surface
 import cores
-from movivel import Movivel
+from movable import Movable
 from pygame.event import Event
 import pygame
 
 fonte_30 = pygame.font.SysFont('arial', 30, True)
 
-class Character(Movivel):
+class Character(Movable):
     
     
     def __init__(self, screen: Surface) -> None:

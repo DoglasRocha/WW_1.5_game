@@ -1,6 +1,6 @@
 from abc import ABCMeta
 from character import Character
-from movivel import Movivel
+from movable import Movable
 from abc import ABCMeta, abstractmethod
 from random import choice
 from time import time
@@ -11,7 +11,7 @@ import pygame
 
 directions = ['NORTH', 'SOUTH', 'EAST', 'WEST', 'NORTH EAST', 'NORTH WEST', 'SOUTH EAST', 'SOUTH WEST']
 
-class Enemy(Movivel, metaclass=ABCMeta):
+class Enemy(Movable, metaclass=ABCMeta):
     
     
     @abstractmethod
@@ -57,7 +57,7 @@ class Enemy(Movivel, metaclass=ABCMeta):
     def refuse_movement(self, directions: str) -> None:
         self.directions = directions
         
-class Recruit(Enemy, Movivel):
+class Recruit(Enemy, Movable):
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 1
@@ -89,7 +89,7 @@ class Recruit(Enemy, Movivel):
         self.weapon.paint(self.size)
 
 
-class Soldier(Enemy, Movivel):
+class Soldier(Enemy, Movable):
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 2
@@ -121,7 +121,7 @@ class Soldier(Enemy, Movivel):
         self.weapon.paint(self.size)
         
         
-class Capitain(Enemy, Movivel):
+class Capitain(Enemy, Movable):
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 1
@@ -153,7 +153,7 @@ class Capitain(Enemy, Movivel):
         self.weapon.paint(self.size)
         
         
-class General(Enemy, Movivel):
+class General(Enemy, Movable):
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 2
