@@ -6,7 +6,7 @@ from score_manager import ScoreManager
 from game_element import GameElement
 from enemies import Enemy, Recruit, Soldier, Capitain, General
 from character import Character
-from matriz import Matriz
+from matrix import Matrix
 from time import time
 from main_menu import MainMenu
 
@@ -20,11 +20,11 @@ class Cenario(GameElement):
     def __init__(self, tela):
         self.state = 'MENU PRINCIPAL'
         self.nivel = 1
-        self.objeto_matriz = Matriz(self.nivel)
-        self.matriz = self.objeto_matriz.get_matriz()
-        self.tamanho = self.objeto_matriz.get_tamanho()
-        self.blocos_na_matriz = self.objeto_matriz.get_numero_blocos()
-        self.paredes = self.objeto_matriz.get_paredes()
+        self.objeto_matriz = Matrix(self.nivel, tela)
+        self.matriz = self.objeto_matriz.get_matrix()
+        self.tamanho = self.objeto_matriz.get_size()
+        self.blocos_na_matriz = self.objeto_matriz.get_number_of_blocks()
+        self.paredes = self.objeto_matriz.get_walls()
         self.tela = tela
         self.menu = MainMenu(self.tela)
         self.personagem = Character(self.tela)
@@ -318,10 +318,10 @@ class Cenario(GameElement):
     
     def inicia_o_nivel(self):
         self.personagem.reinit_stats()
-        self.objeto_matriz = Matriz(self.nivel)
-        self.matriz = self.objeto_matriz.get_matriz()
-        self.tamanho = self.objeto_matriz.get_tamanho()
-        self.blocos_na_matriz = self.objeto_matriz.get_numero_blocos()
+        self.objeto_matriz = Matrix(self.nivel, self.tela)
+        self.matriz = self.objeto_matriz.get_matrix()
+        self.tamanho = self.objeto_matriz.get_size()
+        self.blocos_na_matriz = self.objeto_matriz.get_number_of_blocks()
         self.instanciamento_moviveis()
         self.define_fps()
         self.state = 'JOGANDO'
