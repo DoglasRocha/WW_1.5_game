@@ -52,8 +52,6 @@ class Cenario(GameElement):
         for button in self.buttons:
             button.calculate_rules(mouse[1])
         if self.state == 'JOGANDO':
-            for button in self.buttons:
-                button.calculate_rules(mouse[1])
             if len(self.moviveis) <= 1:
                 self.state = 'PASSANDO NIVEL'
                 self.tempo_que_passou = time()
