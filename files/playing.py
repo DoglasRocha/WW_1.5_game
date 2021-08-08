@@ -137,7 +137,11 @@ class Playing(GameElement):
         collides_with_movable = []
         
         for new_line, new_colunm in movable.hitbox:
-            for another_movable in self.movables:    
+            # taking the other movables
+            for another_movable in self.movables:  
+                # checking if the other movable is not the movable
+                # analised and is not an enemy (enemies don't collide 
+                # with each other)  
                 if id(movable) != id(another_movable) \
                         and isinstance(movable, Enemy):
                     collides = another_movable.line == new_line \
@@ -146,6 +150,13 @@ class Playing(GameElement):
                     
         return any(collides_with_movable)
                         
+    def collides_with_anything(self, movable: Movable) -> bool:
+        '''Method that checks if the movable collides with another
+        movable or a wall'''
+        
+        return self.movable_collides_with_movable(movable) \
+               and self.movable_collides_with_wall(movable)
+        
     def movables_instantiation(self):
         '''Method that instantiate all the movables that are going to be in the level.'''
         pass
