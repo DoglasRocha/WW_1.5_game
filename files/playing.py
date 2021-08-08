@@ -115,6 +115,19 @@ class Playing(GameElement):
             if self.matrix[line][column] in self.walls:
                 movable.weapon.fired_bullets.remove(bullet)
                 del bullet
+                
+    def movable_collides_with_wall(self, movable: Movable) -> bool:
+        '''Method that checks if the movable, in any point of its hitbox, hits
+        a wall. If, in any point, it hits a wall, the method returns True.'''
+        
+        directions_that_can_move = []
+        
+        for line, column in movable.hitbox:
+            collides = self.matrix[line][column] in self.walls
+            directions_that_can_move.append(collides)
+            
+        return any(directions_that_can_move)
+    
         
         
     def movables_instantiation(self):
