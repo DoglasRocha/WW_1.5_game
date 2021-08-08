@@ -1,6 +1,6 @@
-from files.enemies import Captain, Enemy, General, Recruit, Soldier
-from files.bullet import Bullet
-from files.movable import Movable
+from enemies import Captain, Enemy, General, Recruit, Soldier
+from bullet import Bullet
+from movable import Movable
 from typing import Callable
 from pygame import Surface
 from matrix import Matrix
@@ -228,20 +228,20 @@ class Playing(GameElement):
         self.movables = [self.character]
         
         # the number of recruits in the level is equal to the level number
-        for i in range(int(self.nivel)):
-            self.moviveis.append(Recruit(self.screen, self.character))
+        for i in range(int(self.level)):
+            self.movables.append(Recruit(self.screen, self.character))
             
         # the number of soldiers in the level is equal to half the level number
-        for i in range(int(self.nivel * 0.5)):
-            self.moviveis.append(Soldier(self.screen, self.character))
+        for i in range(int(self.level * 0.5)):
+            self.movables.append(Soldier(self.screen, self.character))
             
         # the number of capitains in the level is equal to quarter of the level number
-        for i in range(int(self.nivel * 0.2)):
-            self.moviveis.append(Captain(self.screen, self.character))
+        for i in range(int(self.level * 0.2)):
+            self.movables.append(Captain(self.screen, self.character))
             
         # the number of generals in the level is equal to the level number divided by 10
-        for i in range(int(self.nivel * 0.1)):
-            self.moviveis.append(General(self.screen, self.character))
+        for i in range(int(self.level * 0.1)):
+            self.movables.append(General(self.screen, self.character))
             
         # defining the position and the size of the movables
         for movable in self.movables:
