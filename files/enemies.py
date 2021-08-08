@@ -121,7 +121,7 @@ class Soldier(Enemy, Movable):
         self.weapon.paint(self.size)
         
         
-class Capitain(Enemy, Movable):
+class Captain(Enemy, Movable):
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 1

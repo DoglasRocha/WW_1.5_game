@@ -4,7 +4,7 @@ from pygame.event import Event
 import cores
 from score_manager import ScoreManager
 from game_element import GameElement
-from enemies import Enemy, Recruit, Soldier, Capitain, General
+from enemies import Enemy, Recruit, Soldier, Captain, General
 from character import Character
 from matrix import Matrix
 from time import time
@@ -342,7 +342,7 @@ class Cenario(GameElement):
         for i in range(int(self.nivel * 0.5)):
             self.moviveis.append(Soldier(self.tela, self.personagem))
         for i in range(int(self.nivel * 0.2)):
-            self.moviveis.append(Capitain(self.tela, self.personagem))
+            self.moviveis.append(Captain(self.tela, self.personagem))
         for i in range(int(self.nivel * 0.1)):
             self.moviveis.append(General(self.tela, self.personagem))
         for movivel in self.moviveis:

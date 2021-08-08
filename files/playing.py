@@ -1,4 +1,4 @@
-from files.enemies import Enemy
+from files.enemies import Captain, Enemy, General, Recruit, Soldier
 from files.bullet import Bullet
 from files.movable import Movable
 from typing import Callable
@@ -39,10 +39,12 @@ class Playing(GameElement):
         self.define_fps()
         back_button = BackButton(10, 10, 150, 25, self.state_changer,
                                  'MENU PRINCIPAL', self.score_manager.save_score,
-                                 self.tela, 'VOLTAR', cores.BRANCO, cores.BRANCO,
+                                 self.screen, 'VOLTAR', cores.BRANCO, cores.BRANCO,
                                  cores.BRANCO, cores.PRETO, font_10)
         self.buttons = [back_button]
         self.movables = []
+        
+    '''----------------------CALCULATING THE RULES----------------------'''
         
     def calculate_rules(self, mouse: tuple) -> None:
         '''Method reponsible for calculating the rules of the game. It calculate the rules
@@ -193,33 +195,62 @@ class Playing(GameElement):
         
         directions = []
         
-        if self.matriz[int(line - 1)][int(column)] not in self.paredes:
+        if self.matriz[int(line - 1)][int(column)] not in self.walls:
             directions.append('NORTH')
             
-        if self.matriz[int(line + 1)][int(column)] not in self.paredes:
+        if self.matriz[int(line + 1)][int(column)] not in self.walls:
             directions.append('SOUTH')
             
-        if self.matriz[int(line)][int(column - 1)] not in self.paredes:
+        if self.matriz[int(line)][int(column - 1)] not in self.walls:
             directions.append('WEST')
             
-        if self.matriz[int(line)][int(column + 1)] not in self.paredes:
+        if self.matriz[int(line)][int(column + 1)] not in self.walls:
             directions.append('EAST')
             
-        if self.matriz[int(line - 1)][int(column + 1)] not in self.paredes:
+        if self.matriz[int(line - 1)][int(column + 1)] not in self.walls:
             directions.append('NORTH EAST')
             
-        if self.matriz[int(line - 1)][int(column - 1)] not in self.paredes:
+        if self.matriz[int(line - 1)][int(column - 1)] not in self.walls:
             directions.append('NORTH WEST')
             
-        if self.matriz[int(line + 1)][int(column + 1)] not in self.paredes:
+        if self.matriz[int(line + 1)][int(column + 1)] not in self.walls:
             directions.append('SOUTH EAST')
             
-        if self.matriz[int(line + 1)][int(column - 1)] not in self.paredes:
+        if self.matriz[int(line + 1)][int(column - 1)] not in self.walls:
             directions.append('SOUTH WEST')
             
         return directions
         
     def movables_instantiation(self):
-        '''Method that instantiate all the movables that are going to be in the level.'''
-        pass
+        '''Method that instantiate all the movables that are going to
+        be in the level.'''
+        
+        self.movables = [self.character]
+        
+        # the number of recruits in the level is equal to the level number
+        for i in range(int(self.nivel)):
+            self.moviveis.append(Recruit(self.screen, self.character))
+            
+        # the number of soldiers in the level is equal to half the level number
+        for i in range(int(self.nivel * 0.5)):
+            self.moviveis.append(Soldier(self.screen, self.character))
+            
+        # the number of capitains in the level is equal to quarter of the level number
+        for i in range(int(self.nivel * 0.2)):
+            self.moviveis.append(Captain(self.screen, self.character))
+            
+        # the number of generals in the level is equal to the level number divided by 10
+        for i in range(int(self.nivel * 0.1)):
+            self.moviveis.append(General(self.screen, self.character))
+            
+        # defining the position and the size of the movables
+        for movable in self.movables:
+            if isinstance(movable, Character):
+                # instantiating the enemies in the first position of the matrix
+                movable.define_geometric_stats(len(self.matrix[0]) - 2, 
+                                               len(self.matrix[0]) - 2, 
+                                               self.size)
+                
+            else:
+                movable.define_geometric_stats(1, 1, self.size)
         
