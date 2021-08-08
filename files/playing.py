@@ -1,3 +1,4 @@
+from files.enemies import Enemy
 from files.bullet import Bullet
 from files.movable import Movable
 from typing import Callable
@@ -128,8 +129,23 @@ class Playing(GameElement):
             
         return any(directions_that_can_move)
     
+    def movable_collides_with_movable(self, movable: Movable) -> bool:
+        '''Method that checks if the movable, in any point of its
+        hitbox, hits another movable. If collides, the method returns
+        True'''
         
+        collides_with_movable = []
         
+        for new_line, new_colunm in movable.hitbox:
+            for another_movable in self.movables:    
+                if id(movable) != id(another_movable) \
+                        and isinstance(movable, Enemy):
+                    collides = another_movable.line == new_line \
+                               and another_movable.column == new_colunm
+                    collides_with_movable.append(collides)
+                    
+        return any(collides_with_movable)
+                        
     def movables_instantiation(self):
         '''Method that instantiate all the movables that are going to be in the level.'''
         pass
