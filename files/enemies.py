@@ -54,7 +54,7 @@ class Enemy(Movable, metaclass=ABCMeta):
     def shoot(self) -> None:
         self.weapon.shoot(self.character.x, self.character.y, self.x, self.y)
         
-    def refuse_movement(self, directions: str) -> None:
+    def refuse_movement(self, directions: list) -> None:
         self.directions = directions
         
 class Recruit(Enemy, Movable):

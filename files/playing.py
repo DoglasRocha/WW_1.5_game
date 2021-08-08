@@ -62,7 +62,7 @@ class Playing(GameElement):
             if len(self.movables) > 1:
                 movable.calculate_rules()
                 
-            # special conditions to alive movables
+            # special actions to alive movables
             if movable.state == 'ALIVE':
                 
                 # checking if any bullet collided with a movable of a wall
@@ -87,7 +87,38 @@ class Playing(GameElement):
                     self.matrix_object.clear_health_kit(movable.line,
                                                         movable.column)
                     
-                # now, check if the movable collides with a wall or another movable
+                # checking if the movable collides with a wall or another movable
+                # and doing the respective actions
+                if self.collides_with_anything():
+                    
+                    # if the movable is an enemy, it has to receive a list
+                    # with the possible directions to take
+                    if isinstance(movable, Enemy):
+                        possible_directions = self.get_directions(movable)
+                        movable.refuse_movement(possible_directions)
+                        
+                    # if the movable is the character, it just refuses the movement
+                    else: 
+                        movable.refuse_movement(possible_directions)
+                        
+                # if does not collide with anything, accepts the movement
+                else:
+                    movable.accept_movement()
+                    
+            # special actions if the movable is dead
+            elif movable.state == 'DEAD':
+                
+                # if the movable is an enemy, it has to be removed 
+                # from the list of movables, add his reward to the
+                # score and get deleted from the memory
+                if isinstance(movable, Enemy):
+                    self.movables.remove(movable)
+                    self.score_manager.add_points(movable.reward)
+                    del movable
+                    
+                # if the character is dead, the game has to be reinited    
+                elif isinstance(movable, Character):
+                    self.state = 'DEAD'
                     
     def movable_take_damage(self, movable: Movable, 
                             movable_column: int) -> None:
@@ -156,6 +187,37 @@ class Playing(GameElement):
         
         return self.movable_collides_with_movable(movable) \
                and self.movable_collides_with_wall(movable)
+               
+    def get_directions(self, line: int, column: int) -> list:
+        '''Method that returns the possible directions to a movable take.'''
+        
+        directions = []
+        
+        if self.matriz[int(line - 1)][int(column)] not in self.paredes:
+            directions.append('NORTH')
+            
+        if self.matriz[int(line + 1)][int(column)] not in self.paredes:
+            directions.append('SOUTH')
+            
+        if self.matriz[int(line)][int(column - 1)] not in self.paredes:
+            directions.append('WEST')
+            
+        if self.matriz[int(line)][int(column + 1)] not in self.paredes:
+            directions.append('EAST')
+            
+        if self.matriz[int(line - 1)][int(column + 1)] not in self.paredes:
+            directions.append('NORTH EAST')
+            
+        if self.matriz[int(line - 1)][int(column - 1)] not in self.paredes:
+            directions.append('NORTH WEST')
+            
+        if self.matriz[int(line + 1)][int(column + 1)] not in self.paredes:
+            directions.append('SOUTH EAST')
+            
+        if self.matriz[int(line + 1)][int(column - 1)] not in self.paredes:
+            directions.append('SOUTH WEST')
+            
+        return directions
         
     def movables_instantiation(self):
         '''Method that instantiate all the movables that are going to be in the level.'''
