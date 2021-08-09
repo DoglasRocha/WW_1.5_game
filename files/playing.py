@@ -310,3 +310,27 @@ class Playing(GameElement):
         for button in self.buttons:
             button.paint()
     
+    def paint_line(self, line_number: int, line: list) -> None:
+        '''Paint the a line of 5 height units (5 squares) and all 
+        the width of the scenary. It is generated randomly in lines,
+        so, it is painted in lines.'''
+        
+        # accessing the scenary itself
+        for column_number, column in enumerate(line):
+            # determinating the positon of the squares
+            x = column_number * self.size + (self.screen.get_width() // 5)
+            y = column_number * self.size
+            
+            # process to know the color of the square
+            all_colors = {0: cores.VERDE, 1: cores.BRANCO, 2: cores.AMARELO,
+                          3: cores.CINZA, 4: cores.CINZA_ESCURO, 5: cores.LARANJA,
+                          6: cores.MARROM_ESCURO, 7: cores.MARROM_CLARO, 8: cores.PRATA,
+                          9: cores.LARANJA_FEIO, 10: cores.AZUL_ACO, 11: cores.VERMELHO,
+                          12: cores.MARROM_FEIO}
+            
+            color = all_colors[column]
+            
+            # painting the square
+            pygame.draw.rect(self.screen, color, (x, y, self.size, self.size))
+            
+    
