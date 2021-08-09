@@ -9,8 +9,9 @@ from pygame.time import Clock
 from score_manager import ScoreManager
 from game_element import GameElement
 from back_button import BackButton
-import cores
 from pygame.font import SysFont
+from pygame.event import Event
+import cores
 
 font_10 = SysFont('arial', 10, True)
 
@@ -195,28 +196,28 @@ class Playing(GameElement):
         
         directions = []
         
-        if self.matriz[int(line - 1)][int(column)] not in self.walls:
+        if self.matrix[int(line - 1)][int(column)] not in self.walls:
             directions.append('NORTH')
             
-        if self.matriz[int(line + 1)][int(column)] not in self.walls:
+        if self.matrix[int(line + 1)][int(column)] not in self.walls:
             directions.append('SOUTH')
             
-        if self.matriz[int(line)][int(column - 1)] not in self.walls:
+        if self.matrix[int(line)][int(column - 1)] not in self.walls:
             directions.append('WEST')
             
-        if self.matriz[int(line)][int(column + 1)] not in self.walls:
+        if self.matrix[int(line)][int(column + 1)] not in self.walls:
             directions.append('EAST')
             
-        if self.matriz[int(line - 1)][int(column + 1)] not in self.walls:
+        if self.matrix[int(line - 1)][int(column + 1)] not in self.walls:
             directions.append('NORTH EAST')
             
-        if self.matriz[int(line - 1)][int(column - 1)] not in self.walls:
+        if self.matrix[int(line - 1)][int(column - 1)] not in self.walls:
             directions.append('NORTH WEST')
             
-        if self.matriz[int(line + 1)][int(column + 1)] not in self.walls:
+        if self.matrix[int(line + 1)][int(column + 1)] not in self.walls:
             directions.append('SOUTH EAST')
             
-        if self.matriz[int(line + 1)][int(column - 1)] not in self.walls:
+        if self.matrix[int(line + 1)][int(column - 1)] not in self.walls:
             directions.append('SOUTH WEST')
             
         return directions
@@ -253,4 +254,40 @@ class Playing(GameElement):
                 
             else:
                 movable.define_geometric_stats(1, 1, self.size)
+
+
+    '''----------------------PROCESSING THE EVENTS----------------------'''
+    
+    def process_events(self, event: Event, keyboard: tuple, 
+                       mouse: tuple) -> None:
+        '''Method that process the events (keydown, mouse button down, etc)
+        
+        Receives a event, the keyboard tuple (that contains the keys pressed)
+        and the mouse tuple, that contains the mouse position and the mouse
+        buttons that are being pressed'''
+        
+        # process the events in the button
+        for button in self.buttons:
+            button.process_events()
+        
+        # checking if the player wants to pause the game
+        is_a_key_pressed = event.type == pygame.KEYDOWN
+        if is_a_key_pressed:
+            key = event.key
+            
+            esc = pygame.K_ESCAPE
+            
+            if key == esc:
+                self.state_changer('PAUSED')
+                
+        # calculating the rules of the movables
+        for movable in self.movables:
+            # if the movable is the Character, it has to receive the
+            # event, the keyboard and the mouse 
+            if isinstance(movable, Character):
+                movable.process_events(event, keyboard, mouse)
+            
+            else:
+                movable.process_events()
+            
         
