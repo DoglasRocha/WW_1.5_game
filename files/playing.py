@@ -291,3 +291,22 @@ class Playing(GameElement):
                 movable.process_events()
             
         
+    '''----------------------PAINTING----------------------'''
+    
+    def paint(self) -> None:
+        '''Method that paints the scenary in the screen. It access the matrix
+        and paints according to the information contained in the matrix,
+        paint the movables, the side bar and the buttons'''
+        
+        # paint the scenary
+        for line_number, line in enumerate(self.matrix):
+            self.paint_line(line_number, line)
+        # paint the side bar
+        self.paint_side_bar()
+        # paint the movables
+        for movable in self.movables:
+            movable.paint()
+        # paint the buttons
+        for button in self.buttons:
+            button.paint()
+    
