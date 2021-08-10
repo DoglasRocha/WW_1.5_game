@@ -44,7 +44,7 @@ class Playing(GameElement):
                                  self.screen, 'VOLTAR', cores.BRANCO, cores.BRANCO,
                                  cores.BRANCO, cores.PRETO, font_10)
         self.buttons = [back_button]
-        self.movables = []
+        self.movables = [self.character]
         
     '''----------------------CALCULATING THE RULES----------------------'''
         
