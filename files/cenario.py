@@ -46,11 +46,14 @@ class Cenario(GameElement):
                                  cores.BRANCO, cores.PRETO, fonte_10)
         self.buttons = [back_button]'''
         
-        self.playing = Playing(tela, self.state_changer)
+        self.character = Character(tela)
+        self.score_manager = ScoreManager()
+        self.playing = Playing(tela, self.state_changer, self.character,
+                               self.score_manager)
         self.paused = Paused(self.state_changer, tela)
         self.dead = Dead(self.state_changer, tela)
         self.passing_level = PassingLevel(self.state_changer, tela)
-        self.menu = MainMenu(tela)
+        self.menu = MainMenu(tela, self.state_changer, self.character)
         self.state = 'MAIN MENU'
         
     #'''passagem tempo'''
@@ -89,15 +92,12 @@ class Cenario(GameElement):
         
         environment = states_and_calculations[self.state]
         mouse_pressed, mouse_position = mouse
-        if self.state != 'MAIN MENU':
-            environment.calculate_rules(mouse_position)
-        else:
-            environment.calculate_rules(mouse_position)
-            if self.menu.allowed_to_play():
+        environment.calculate_rules(mouse_position)
+        '''if self.menu.allowed_to_play():
                     weapon = self.menu.get_gun()(self.tela)
-                    self.personagem.receive_weapon(weapon)
+                    self.character.receive_weapon(weapon)
                     self.menu.reset()
-                    self.inicia_o_nivel()
+                    self.inicia_o_nivel()'''
             
     def calcula_regras_jogando(self, movivel):
         if movivel.state == 'ALIVE':
@@ -209,10 +209,10 @@ class Cenario(GameElement):
         environment = states_and_calculations[self.state]
         
         for e in eventos:
-            '''if e.type == pygame.QUIT:
+            if e.type == pygame.QUIT:
                 self.score_manager.save_score()
                 exit()
-            elif self.state == 'MENU PRINCIPAL' and e.type == pygame.MOUSEBUTTONDOWN:
+            '''elif self.state == 'MENU PRINCIPAL' and e.type == pygame.MOUSEBUTTONDOWN:
                 self.menu.process_events(e, mouse)
                 if self.menu.allowed_to_play():
                     weapon = self.menu.get_gun()(self.tela)
@@ -227,9 +227,10 @@ class Cenario(GameElement):
                 for button in self.buttons:
                     button.process_events(e, mouse)
                 self.processar_eventos_pausado(e)'''
-            if self.state == 'PLAYING':
+            if isinstance(environment, Playing):
                 environment.process_events(e, teclado, mouse)
-            else:
+            elif e.type == pygame.MOUSEBUTTONDOWN \
+                    and self.state == 'MAIN MENU':
                 environment.process_events(e, mouse)
                 
     def processar_eventos_jogando(self, evento, teclado, mouse):

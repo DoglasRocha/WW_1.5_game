@@ -18,7 +18,7 @@ class ScreenTemplate(GameElement, metaclass=ABCMeta):
             
     def process_events(self, events: Event, mouse: tuple):
         for button in self.buttons:
-            button.process_events(None, mouse)
+            button.process_events(events, mouse)
             
     def paint(self):
         for button in self.buttons:

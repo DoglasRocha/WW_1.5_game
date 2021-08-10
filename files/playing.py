@@ -9,8 +9,9 @@ from pygame.time import Clock
 from score_manager import ScoreManager
 from game_element import GameElement
 from back_button import BackButton
-from pygame.font import SysFont
+from pygame.font import SysFont, Font
 from pygame.event import Event
+import pygame
 import cores
 
 font_10 = SysFont('arial', 10, True)
@@ -20,7 +21,8 @@ font_20 = SysFont('arial', 20, True)
 class Playing(GameElement):
     
     
-    def __init__(self, screen: Surface, state_changer: Callable) -> None:
+    def __init__(self, screen: Surface, state_changer: Callable,
+                 character: Character, score_manager: ScoreManager) -> None:
         '''Python special method that constructs the class.
         Receives the screen, that is Pygame Surface and the state changer, 
         which is the method that changes the state of the mother class'''
@@ -33,11 +35,12 @@ class Playing(GameElement):
         self.blocks_in_the_matrix = self.matrix_object.get_number_of_blocks()
         self.walls = self.matrix_object.get_walls()
         self.screen = screen
-        self.character = Character(screen)
+        self.character = character
+        self.movables = [self.character]
         self.movables_instantiation()
         self.clock = Clock()
         self.state_changer = state_changer
-        self.score_manager = ScoreManager()
+        self.score_manager = score_manager
         self.define_fps()
         back_button = BackButton(10, 10, 150, 25, self.state_changer,
                                  'PAUSED', self.score_manager.save_score,
@@ -45,7 +48,6 @@ class Playing(GameElement):
                                  self.screen, 'VOLTAR', cores.BRANCO, cores.BRANCO,
                                  cores.BRANCO, cores.PRETO, font_10)
         self.buttons = [back_button]
-        self.movables = [self.character]
         
     '''----------------------CALCULATING THE RULES----------------------'''
         
@@ -97,17 +99,16 @@ class Playing(GameElement):
                         
                     # checking if the movable collides with a wall or another movable
                     # and doing the respective actions
-                    if self.collides_with_anything():
-                        
+                    if self.collides_with_anything(movable):
                         # if the movable is an enemy, it has to receive a list
                         # with the possible directions to take
                         if isinstance(movable, Enemy):
-                            possible_directions = self.get_directions(movable)
+                            possible_directions = self.get_directions(movable.line, movable.column)
                             movable.refuse_movement(possible_directions)
                             
                         # if the movable is the character, it just refuses the movement
                         else: 
-                            movable.refuse_movement(possible_directions)
+                            movable.refuse_movement()
                             
                     # if does not collide with anything, accepts the movement
                     else:
@@ -201,7 +202,7 @@ class Playing(GameElement):
         movable or a wall'''
         
         return self.movable_collides_with_movable(movable) \
-               and self.movable_collides_with_wall(movable)
+               or self.movable_collides_with_wall(movable)
                
     def get_directions(self, line: int, column: int) -> list:
         '''Method that returns the possible directions to a movable take.'''
@@ -280,7 +281,7 @@ class Playing(GameElement):
         
         # process the events in the button
         for button in self.buttons:
-            button.process_events()
+            button.process_events(event, mouse)
         
         # checking if the player wants to pause the game
         is_a_key_pressed = event.type == pygame.KEYDOWN
@@ -321,6 +322,15 @@ class Playing(GameElement):
         # paint the buttons
         for button in self.buttons:
             button.paint()
+            
+    def paint_text(self, text: str, x: int, y: int, fonte: Font,
+                   color: tuple) -> None:
+        '''Method that paint a text in a centered position'''
+        
+        render = fonte.render(text, True, color)
+        cent_x = render.get_width() / 2
+        cent_y = render.get_height() / 2
+        self.screen.blit(render, (x - cent_x, y - cent_y))
     
     def paint_line(self, line_number: int, line: list) -> None:
         '''Paint the a line of 5 height units (5 squares) and all 
@@ -359,16 +369,16 @@ class Playing(GameElement):
         general_score = f'Pontuação Geral: {round(self.score_manager.get_general_score(), 2)}'
         level = f'Nível: {self.level}'
         level_pontuation = f'Pontuação no Nível: {round(self.score_manager.get_level_score(), 2)}'
-        attempt = f'attempt nº: {self.score_manager.get_attempt()}'
+        attempt = f'Tentativa nº: {self.score_manager.get_attempt()}'
         
         # calculating the position in the x axis
-        x = self.screen - (self.screen // 10)
+        x = self.screen.get_width() - (self.screen.get_width() // 10)
         
         # calculating the initial position in the y axis
-        y = self.screen // 40
+        y = self.screen.get_height() // 40
         
         # calculating the increment to the y axis
-        y_increment = self.screen // 20
+        y_increment = self.screen.get_height() // 20
         
         self.paint_text(general_score, x, y, font_20, cores.BRANCO)
         y += y_increment
@@ -385,8 +395,8 @@ class Playing(GameElement):
         '''Method that paint the 5 biggest scores.'''
         
         # calculating the position in the x axis and the y axis initial positon 
-        x = self.screen - (self.screen // 10)
-        y = self.screen // 2.5
+        x = self.screen.get_width() - (self.screen.get_width() // 10)
+        y = self.screen.get_height() // 2.5
         
         # painting the title
         title = 'RECORDES DE PONTUAÇÃO'

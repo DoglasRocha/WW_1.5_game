@@ -1,3 +1,4 @@
+from time import sleep
 from guns import Weapon
 from typing import Callable
 from pygame.event import Event
@@ -12,7 +13,7 @@ class GunButton(GameElement):
 
 
     def __init__(self, x: int, y: int, gun_receiver: Callable,
-                 state_changer: Callable, screen: Surface,
+                 trigger: Callable, screen: Surface,
                  unfocused_border_color: tuple,
                  unfocused_text_color: tuple,
                  focused_button_color: tuple,
@@ -20,7 +21,7 @@ class GunButton(GameElement):
                  gun: Weapon) -> None:
         self.x = x
         self.gun_receiver = gun_receiver
-        self.state_changer = state_changer
+        self.trigger = trigger
         self.screen = screen
         self.unfocused_border_color = unfocused_border_color
         self.unfocused_text_color = unfocused_text_color
@@ -43,10 +44,10 @@ class GunButton(GameElement):
         mouse_buttons_pressed, mouse_position = mouse
         x, y = mouse_position
 
-        if self.has_click_inside_the_button(x, y,
+        if self.has_click_inside_the_button(mouse_position[0], mouse_position[1],
                                             mouse_buttons_pressed):
-            self.gun_receiver(self.gun)
-            self.state_changer('PLAYING')
+            self.gun_receiver(self.gun_instance)
+            self.trigger()
 
     '''Calculating rules'''
     def calculate_rules(self, mouse_position: tuple) -> None:

@@ -13,7 +13,7 @@ class WeaponSelectorScreen(ScreenTemplate):
 
     
     def __init__(self, state_changer: Callable, screen: Surface, 
-                 gun_receiver: Callable):
+                 gun_receiver: Callable, trigger: Callable):
         buttons_width = 150
         buttons_height = 25
         buttons_x = 10
@@ -26,18 +26,20 @@ class WeaponSelectorScreen(ScreenTemplate):
                              font_15)
         self.buttons = [back_button]
         
-        self.gun_button_instanciation(screen, gun_receiver, state_changer)
+        self.gun_button_instanciation(screen, gun_receiver, 
+                                      state_changer, trigger)
             
     def gun_button_instanciation(self, screen: Surface,
                                  gun_receiver: Callable,
-                                 state_changer: Callable) -> None:
+                                 state_changer: Callable,
+                                 trigger: Callable) -> None:
         guns = [Pistol, SMG, AK47, Shotgun, Sniper]
         part_x = screen.get_width() // 4
         part_y = screen.get_height() // 3
         for i in range(1, 4):
             x = part_x * i
             y = part_y
-            self.buttons.append(GunButton(x, y, gun_receiver, state_changer,
+            self.buttons.append(GunButton(x, y, gun_receiver, trigger,
                                           screen, cores.BRANCO,
                                           cores.BRANCO, cores.BRANCO, 
                                           cores.PRETO, guns[i - 1]))
@@ -46,7 +48,7 @@ class WeaponSelectorScreen(ScreenTemplate):
         for i in range(2):
             x = part_x * (i + 1)
             y = part_y * 2
-            self.buttons.append(GunButton(x, y, gun_receiver, state_changer,
+            self.buttons.append(GunButton(x, y, gun_receiver, trigger,
                                           screen, cores.BRANCO,
                                           cores.BRANCO, cores.BRANCO, 
                                           cores.PRETO, guns[i + 3]))
