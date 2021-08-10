@@ -14,6 +14,7 @@ from pygame.event import Event
 import cores
 
 font_10 = SysFont('arial', 10, True)
+font_20 = SysFont('arial', 20, True)
 
 
 class Playing(GameElement):
@@ -319,7 +320,7 @@ class Playing(GameElement):
         for column_number, column in enumerate(line):
             # determinating the positon of the squares
             x = column_number * self.size + (self.screen.get_width() // 5)
-            y = column_number * self.size
+            y = line_number * self.size
             
             # process to know the color of the square
             all_colors = {0: cores.VERDE, 1: cores.BRANCO, 2: cores.AMARELO,
@@ -333,4 +334,24 @@ class Playing(GameElement):
             # painting the square
             pygame.draw.rect(self.screen, color, (x, y, self.size, self.size))
             
+    def paint_side_bar(self) -> None:
+        '''Method that paints the side bar, which contains the pontuation,
+        the ammo remaining, the HP and the previous pontuation records'''
+        
+        self.paint_score()
+        self.paint_records()
+        
+    def paint_score(self) -> None:
+        '''Paint the general score (earned in the previous levels), the score
+        earned in the current level, the level and the current attempt'''
+        
+        general_score = f'Pontuação Geral: {round(self.score_manager.get_general_score(), 2)}'
+        level = f'Nível: {self.level}'
+        level_pontuation = f'Pontuação no Nível: {round(self.score_manager.get_level_score(), 2)}'
+        attempt = f'attempt nº: {self.score_manager.get_attempt()}'
+        
+        self.pintar_texto(general_score, 1350, 25, font_20, cores.BRANCO)
+        self.pintar_texto(level, 1350, 75, font_20, cores.BRANCO)
+        self.pintar_texto(level_pontuation, 1350, 125, font_20, cores.BRANCO)
+        self.pintar_texto(attempt, 1350, 175, font_20, cores.BRANCO)
     
