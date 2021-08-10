@@ -59,6 +59,11 @@ class Playing(GameElement):
         for button in self.buttons:
             button.calculate_rules(mouse_position)
             
+        # if the character dies, the level has to be reinited
+        if self.state == 'DEAD':
+            self.reinit_level()
+            self.state_changer('DEAD')
+            
         if len(self.movables) > 1:
             
             # calculate the rules of the movables
@@ -127,8 +132,7 @@ class Playing(GameElement):
         # character still alive, the level has to be past
         else:
             # passing the level
-            self.level += 1
-            
+            self.pass_level()
             # changing the state of the game manager
             self.state_changer('PASSING LEVEL')
                     
@@ -423,7 +427,7 @@ class Playing(GameElement):
         self.score_manager.to_next_level()
         self.init_level()
         
-    def reinicia_o_nivel(self) -> None:
+    def reinit_level(self) -> None:
         '''Method used when the Character dies'''
         
         self.score_manager.re_init_level()
