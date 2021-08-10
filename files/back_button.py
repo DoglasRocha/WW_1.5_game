@@ -4,12 +4,14 @@ from pygame import Surface
 from pygame.font import Font
 from pygame.event import Event
 
+
 class BackButton(Button):
     
     
     def __init__(self, x: int, y: int, width: int, height: int,
                  state_changer: Callable, new_state: str,
                  save_pontuation_method: Callable,
+                 reset_game_method: Callable,
                  screen: Surface, text: str,
                  unfocused_border_color: tuple,
                  unfocused_text_color: tuple,
@@ -31,6 +33,7 @@ class BackButton(Button):
         self.focused_text_color = focused_text_color
         self.font = font
         self.state = 'NOT FOCUSED'
+        self.reset_game = reset_game_method
         
     def process_events(self, event: Event, mouse: tuple) -> None:
         mouse_buttons_pressed = mouse[0]
@@ -40,4 +43,5 @@ class BackButton(Button):
                                             mouse_position[1],
                                             mouse_buttons_pressed):
             self.save_pontuation_method()
+            self.reset_game()
             self.state_changer(self.new_state)

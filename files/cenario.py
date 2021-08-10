@@ -37,6 +37,7 @@ class Cenario(GameElement):
         self.define_fps()
         back_button = BackButton(10, 10, 150, 25, self.state_changer,
                                  'MENU PRINCIPAL', self.score_manager.save_score,
+                                 self.reset_game,
                                  self.tela, 'VOLTAR', cores.BRANCO, cores.BRANCO,
                                  cores.BRANCO, cores.PRETO, fonte_10)
         self.buttons = [back_button]
@@ -332,6 +333,9 @@ class Cenario(GameElement):
     def reinicia_o_nivel(self):
         self.score_manager.re_init_level()
         self.inicia_o_nivel()
+        
+    def reset_game(self) -> None:
+        self.nivel = 1
         
     '''nascimento dos moviveis'''
     def instanciamento_moviveis(self):

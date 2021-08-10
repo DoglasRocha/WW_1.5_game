@@ -58,71 +58,79 @@ class Playing(GameElement):
         
         for button in self.buttons:
             button.calculate_rules(mouse_position)
-        
-        # calculate the rules of the movables
-        for movable in self.movables:
             
-            # calculating the rules of all movables
-            if len(self.movables) > 1:
+        if len(self.movables) > 1:
+            
+            # calculate the rules of the movables
+            for movable in self.movables:
+                # calculating the rules of all movables
                 movable.calculate_rules()
-                
-            # special actions to alive movables
-            if movable.state == 'ALIVE':
-                
-                # checking if any bullet collided with a movable of a wall
-                for bullet in movable.weapon.fired_bullets:
-                    self.bullet_collided_with_movable(movable, bullet)
-                    self.bullet_collided_with_wall(movable, bullet)
                     
-                # checking if the movable is in a "trap"
-                movable_column = self.matrix[movable.line][movable.column]
-                if movable_column in (6, 7, 8, 12): # places where the movable receives damage
-                    self.movable_take_damage(movable, movable_column)
-                
-                # checking if the movable is in a ammo point
-                elif movable_column == 10:
-                    movable.receive_ammo(50)
-                    self.matrix_object.clear_ammo(movable.line,
-                                                  movable.column)
-                
-                # checking if the movable is in a hp point
-                elif movable_column == 11:
-                    movable.gain_hp(50)
-                    self.matrix_object.clear_health_kit(movable.line,
-                                                        movable.column)
+                # special actions to alive movables
+                if movable.state == 'ALIVE':
                     
-                # checking if the movable collides with a wall or another movable
-                # and doing the respective actions
-                if self.collides_with_anything():
+                    # checking if any bullet collided with a movable of a wall
+                    for bullet in movable.weapon.fired_bullets:
+                        self.bullet_collided_with_movable(movable, bullet)
+                        self.bullet_collided_with_wall(movable, bullet)
+                        
+                    # checking if the movable is in a "trap"
+                    movable_column = self.matrix[movable.line][movable.column]
+                    if movable_column in (6, 7, 8, 12): # places where the movable receives damage
+                        self.movable_take_damage(movable, movable_column)
                     
-                    # if the movable is an enemy, it has to receive a list
-                    # with the possible directions to take
+                    # checking if the movable is in a ammo point
+                    elif movable_column == 10:
+                        movable.receive_ammo(50)
+                        self.matrix_object.clear_ammo(movable.line,
+                                                    movable.column)
+                    
+                    # checking if the movable is in a hp point
+                    elif movable_column == 11:
+                        movable.gain_hp(50)
+                        self.matrix_object.clear_health_kit(movable.line,
+                                                            movable.column)
+                        
+                    # checking if the movable collides with a wall or another movable
+                    # and doing the respective actions
+                    if self.collides_with_anything():
+                        
+                        # if the movable is an enemy, it has to receive a list
+                        # with the possible directions to take
+                        if isinstance(movable, Enemy):
+                            possible_directions = self.get_directions(movable)
+                            movable.refuse_movement(possible_directions)
+                            
+                        # if the movable is the character, it just refuses the movement
+                        else: 
+                            movable.refuse_movement(possible_directions)
+                            
+                    # if does not collide with anything, accepts the movement
+                    else:
+                        movable.accept_movement()
+                        
+                # special actions if the movable is dead
+                elif movable.state == 'DEAD':
+                    
+                    # if the movable is an enemy, it has to be removed 
+                    # from the list of movables, add his reward to the
+                    # score and get deleted from the memory
                     if isinstance(movable, Enemy):
-                        possible_directions = self.get_directions(movable)
-                        movable.refuse_movement(possible_directions)
+                        self.movables.remove(movable)
+                        self.score_manager.add_points(movable.reward)
+                        del movable
                         
-                    # if the movable is the character, it just refuses the movement
-                    else: 
-                        movable.refuse_movement(possible_directions)
-                        
-                # if does not collide with anything, accepts the movement
-                else:
-                    movable.accept_movement()
-                    
-            # special actions if the movable is dead
-            elif movable.state == 'DEAD':
-                
-                # if the movable is an enemy, it has to be removed 
-                # from the list of movables, add his reward to the
-                # score and get deleted from the memory
-                if isinstance(movable, Enemy):
-                    self.movables.remove(movable)
-                    self.score_manager.add_points(movable.reward)
-                    del movable
-                    
-                # if the character is dead, the game has to be reinited    
-                elif isinstance(movable, Character):
-                    self.state = 'DEAD'
+                    # if the character is dead, the game has to be reinited    
+                    elif isinstance(movable, Character):
+                        self.state = 'DEAD'
+        # if the length of the movables list is equal to one and the 
+        # character still alive, the level has to be past
+        else:
+            # passing the level
+            self.level += 1
+            
+            # changing the state of the game manager
+            self.state_changer('PASSING LEVEL')
                     
     def movable_take_damage(self, movable: Movable, 
                             movable_column: int) -> None:
@@ -392,3 +400,43 @@ class Playing(GameElement):
             
             self.paint_text(text, 1350, position_y, font_10, cores.BRANCO)
             position_y += y // 20
+            
+    '''----------------------LEVEL LOGIC----------------------'''
+    
+    def init_level(self) -> None:
+        '''Method that execut all the methods needed to
+        init the level'''
+        
+        self.character.reinit_stats()
+        self.matrix_object = Matrix(self.level, self.screen)
+        self.matrix = self.matrix_object.get_matrix()
+        self.size = self.matrix_object.get_size()
+        self.blocks_in_the_matrix = self.matrix_object.get_number_of_blocks()
+        self.movables_instantiation()
+        self.define_fps()
+        self.state = 'PLAYING'
+        
+    def pass_level(self) -> None:
+        '''Method used when the Character kills all the enemies'''
+        
+        self.level += 1
+        self.score_manager.to_next_level()
+        self.init_level()
+        
+    def reinicia_o_nivel(self) -> None:
+        '''Method used when the Character dies'''
+        
+        self.score_manager.re_init_level()
+        self.init_level()
+        
+    def reset_game(self) -> None:
+        '''Method used when the player goes to the menu'''
+        
+        self.level = 1
+        
+    def define_fps(self) -> None:
+        '''Method that defines the fps (and ultimatelly, the speed
+        of the game'''
+        
+        fps = 2420 // self.blocks_in_the_matrix
+        self.clock.tick(fps)
