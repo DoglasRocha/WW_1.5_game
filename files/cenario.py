@@ -1,7 +1,8 @@
-from files.passing_level import PassingLevel
-from files.dead import Dead
-from files.paused import Paused
-from files.playing import Playing
+from pygame.font import init; init()
+from passing_level import PassingLevel
+from dead import Dead
+from paused import Paused
+from playing import Playing
 from back_button import BackButton
 import pygame
 from pygame.event import Event
@@ -88,7 +89,15 @@ class Cenario(GameElement):
         
         environment = states_and_calculations[self.state]
         mouse_pressed, mouse_position = mouse
-        environment.calculate_rules(mouse_position)
+        if self.state != 'MAIN MENU':
+            environment.calculate_rules(mouse_position)
+        else:
+            environment.calculate_rules(mouse_position)
+            if self.menu.allowed_to_play():
+                    weapon = self.menu.get_gun()(self.tela)
+                    self.personagem.receive_weapon(weapon)
+                    self.menu.reset()
+                    self.inicia_o_nivel()
             
     def calcula_regras_jogando(self, movivel):
         if movivel.state == 'ALIVE':
@@ -254,8 +263,9 @@ class Cenario(GameElement):
                                    'PAUSED': self.paused}
         
         environment = states_and_calculations[self.state]
+        environment.paint()
         
-        if self.state == 'MENU PRINCIPAL':
+        '''if self.state == 'MENU PRINCIPAL':
             self.menu.paint()
         elif self.state == 'JOGANDO':
             self.pintar_jogando()
@@ -266,7 +276,7 @@ class Cenario(GameElement):
         elif self.state == 'DEAD':
             self.pintar_DEAD()
         elif self.state == 'VITORIA':
-            self.pintar_vitoria()
+            self.pintar_vitoria()'''
         
             
     def pintar_linha(self, numero_linha, linha):

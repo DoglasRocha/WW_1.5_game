@@ -43,7 +43,7 @@ class GenericStateScreenTemplate(ScreenTemplate):
         # instantiating the render of the text
         self.text = font_50.render(text, True, cores.BRANCO)
         text_x = screen.get_width() // 2 - self.text.get_width() // 2
-        text_y = screen.get_height() // 4 - self.text.get_height // 2
+        text_y = screen.get_height() // 4 - self.text.get_height() // 2
         self.text_position = (text_x, text_y)
         self.screen = screen
         

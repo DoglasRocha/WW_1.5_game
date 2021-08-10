@@ -41,6 +41,7 @@ class Playing(GameElement):
         self.define_fps()
         back_button = BackButton(10, 10, 150, 25, self.state_changer,
                                  'PAUSED', self.score_manager.save_score,
+                                 self.reset_game,
                                  self.screen, 'VOLTAR', cores.BRANCO, cores.BRANCO,
                                  cores.BRANCO, cores.PRETO, font_10)
         self.buttons = [back_button]

@@ -1,3 +1,4 @@
+from typing import Callable
 from weapon_selector_screen import WeaponSelectorScreen
 from credits_screen import CreditsScreen
 from main_menu_screen import MainMenuScreen
@@ -8,7 +9,7 @@ from guns import Weapon
 
 class MainMenu:
     
-    def __init__(self, screen: Surface):
+    def __init__(self, screen: Surface, game_state_changer: Callable):
         self.state = 'MENU'
         self.main_menu_screen = MainMenuScreen(self.change_state, screen)
         self.credits_screen = CreditsScreen(self.change_state, screen)
@@ -37,15 +38,18 @@ class MainMenu:
             event_processor.process_events(evento, mouse)
             
     '''RULES CALCULATOR'''
-    def calculate_rules(self, mouse: tuple):
-        _, mouse_position = mouse
+    def calculate_rules(self, mouse_position: tuple):
         
-        ruler = self.screen_selector_by_state[self.state]
-        
-        if ruler != exit:
-            ruler.calculate_rules(mouse_position)
+        if self.state != 'PLAYING':
+            ruler = self.screen_selector_by_state[self.state]
         else:
+            ruler = None
+        
+        if ruler != exit or ruler != None:
+            ruler.calculate_rules(mouse_position)
+        elif ruler == exit:
             ruler()
+        else: pass
         
     '''AUXILIARY METHODS'''
     def allowed_to_play(self) -> None:
