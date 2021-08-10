@@ -40,7 +40,7 @@ class Playing(GameElement):
         self.score_manager = ScoreManager()
         self.define_fps()
         back_button = BackButton(10, 10, 150, 25, self.state_changer,
-                                 'MENU PRINCIPAL', self.score_manager.save_score,
+                                 'PAUSED', self.score_manager.save_score,
                                  self.screen, 'VOLTAR', cores.BRANCO, cores.BRANCO,
                                  cores.BRANCO, cores.PRETO, font_10)
         self.buttons = [back_button]
@@ -48,13 +48,11 @@ class Playing(GameElement):
         
     '''----------------------CALCULATING THE RULES----------------------'''
         
-    def calculate_rules(self, mouse: tuple) -> None:
+    def calculate_rules(self, mouse_position: tuple) -> None:
         '''Method reponsible for calculating the rules of the game. It calculate the rules
         of the buttons and the game itself.
         
         Receives the buttons pressed in the mouse and the position of the mouse.'''
-        
-        mouse_pressed, mouse_position = mouse
         
         for button in self.buttons:
             button.calculate_rules(mouse_position)

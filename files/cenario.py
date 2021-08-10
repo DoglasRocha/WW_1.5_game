@@ -1,3 +1,7 @@
+from files.passing_level import PassingLevel
+from files.dead import Dead
+from files.paused import Paused
+from files.playing import Playing
 from back_button import BackButton
 import pygame
 from pygame.event import Event
@@ -18,7 +22,7 @@ class Cenario(GameElement):
     
     
     def __init__(self, tela):
-        self.state = 'MENU PRINCIPAL'
+        '''self.state = 'MENU PRINCIPAL'
         self.nivel = 1
         self.objeto_matriz = Matrix(self.nivel, tela)
         self.matriz = self.objeto_matriz.get_matrix()
@@ -26,7 +30,6 @@ class Cenario(GameElement):
         self.blocos_na_matriz = self.objeto_matriz.get_number_of_blocks()
         self.paredes = self.objeto_matriz.get_walls()
         self.tela = tela
-        self.menu = MainMenu(self.tela)
         self.personagem = Character(self.tela)
         self.instanciamento_moviveis()
         self.clock = pygame.time.Clock()
@@ -40,17 +43,24 @@ class Cenario(GameElement):
                                  self.reset_game,
                                  self.tela, 'VOLTAR', cores.BRANCO, cores.BRANCO,
                                  cores.BRANCO, cores.PRETO, fonte_10)
-        self.buttons = [back_button]
+        self.buttons = [back_button]'''
         
-    '''passagem tempo'''
-    @property
+        self.playing = Playing(tela, self.state_changer)
+        self.paused = Paused(self.state_changer, tela)
+        self.dead = Dead(self.state_changer, tela)
+        self.passing_level = PassingLevel(self.state_changer, tela)
+        self.menu = MainMenu(tela)
+        self.state = 'MAIN MENU'
+        
+    #'''passagem tempo'''
+    '''@property
     def ja_passou_o_tempo(self):
-        return time() - self.tempo_que_passou >= self.tempo_para_passar
+        return time() - self.tempo_que_passou >= self.tempo_para_passar'''
     
-    '''calculo das regras'''
+    #'''calculo das regras'''
     
     def calculate_rules(self, mouse: tuple):
-        for button in self.buttons:
+        '''for button in self.buttons:
             button.calculate_rules(mouse[1])
         if self.state == 'JOGANDO':
             if len(self.moviveis) <= 1:
@@ -69,7 +79,16 @@ class Cenario(GameElement):
                 button.calculate_rules(mouse[1])
             self.reinicia_o_nivel()
         elif self.state == 'MENU PRINCIPAL':
-            self.menu.calculate_rules(mouse)
+            self.menu.calculate_rules(mouse)'''
+        states_and_calculations = {'PLAYING': self.playing,
+                                   'MAIN MENU': self.menu,
+                                   'DEAD': self.dead,
+                                   'PASSING LEVEL': self.passing_level,
+                                   'PAUSED': self.paused}
+        
+        environment = states_and_calculations[self.state]
+        mouse_pressed, mouse_position = mouse
+        environment.calculate_rules(mouse_position)
             
     def calcula_regras_jogando(self, movivel):
         if movivel.state == 'ALIVE':
@@ -169,11 +188,19 @@ class Cenario(GameElement):
     def state_changer(self, new_state: str):
         self.state = new_state
     
-    '''processamento de eventos'''
+    #'''processamento de eventos'''
     
     def process_events(self, eventos, teclado, mouse):
+        states_and_calculations = {'PLAYING': self.playing,
+                                   'MAIN MENU': self.menu,
+                                   'DEAD': self.dead,
+                                   'PASSING LEVEL': self.passing_level,
+                                   'PAUSED': self.paused}
+        
+        environment = states_and_calculations[self.state]
+        
         for e in eventos:
-            if e.type == pygame.QUIT:
+            '''if e.type == pygame.QUIT:
                 self.score_manager.save_score()
                 exit()
             elif self.state == 'MENU PRINCIPAL' and e.type == pygame.MOUSEBUTTONDOWN:
@@ -190,7 +217,11 @@ class Cenario(GameElement):
             elif self.state == 'PAUSADO':
                 for button in self.buttons:
                     button.process_events(e, mouse)
-                self.processar_eventos_pausado(e)
+                self.processar_eventos_pausado(e)'''
+            if self.state == 'PLAYING':
+                environment.process_events(e, teclado, mouse)
+            else:
+                environment.process_events(e, mouse)
                 
     def processar_eventos_jogando(self, evento, teclado, mouse):
         tecla_pressionada = evento.type == pygame.KEYDOWN
@@ -213,9 +244,17 @@ class Cenario(GameElement):
         if esc_pressionado:
             self.state = 'JOGANDO'
                     
-    '''pintura'''
+    #'''pintura'''
                                
     def paint(self):
+        states_and_calculations = {'PLAYING': self.playing,
+                                   'MAIN MENU': self.menu,
+                                   'DEAD': self.dead,
+                                   'PASSING LEVEL': self.passing_level,
+                                   'PAUSED': self.paused}
+        
+        environment = states_and_calculations[self.state]
+        
         if self.state == 'MENU PRINCIPAL':
             self.menu.paint()
         elif self.state == 'JOGANDO':
@@ -313,7 +352,7 @@ class Cenario(GameElement):
             self.pintar_texto(text, 1350, position_y, fonte_10, cores.BRANCO)
             position_y += 20
             
-    '''logica de niveis'''
+    #'''logica de niveis'''
     
     def inicia_o_nivel(self):
         self.personagem.reinit_stats()
@@ -337,7 +376,7 @@ class Cenario(GameElement):
     def reset_game(self) -> None:
         self.nivel = 1
         
-    '''nascimento dos moviveis'''
+    #'''nascimento dos moviveis'''
     def instanciamento_moviveis(self):
         self.moviveis = []
         self.moviveis.append(self.personagem)
@@ -355,7 +394,7 @@ class Cenario(GameElement):
             else:
                 movivel.define_geometric_stats(1, 1, self.tamanho)
     
-    '''calculo dos fps'''
+    #'''calculo dos fps'''
     def define_fps(self):
         fps = 2420 // self.blocos_na_matriz
         self.clock.tick(fps)
