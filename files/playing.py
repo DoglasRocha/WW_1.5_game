@@ -350,8 +350,45 @@ class Playing(GameElement):
         level_pontuation = f'Pontuação no Nível: {round(self.score_manager.get_level_score(), 2)}'
         attempt = f'attempt nº: {self.score_manager.get_attempt()}'
         
-        self.pintar_texto(general_score, 1350, 25, font_20, cores.BRANCO)
-        self.pintar_texto(level, 1350, 75, font_20, cores.BRANCO)
-        self.pintar_texto(level_pontuation, 1350, 125, font_20, cores.BRANCO)
-        self.pintar_texto(attempt, 1350, 175, font_20, cores.BRANCO)
+        # calculating the position in the x axis
+        x = self.screen - (self.screen // 10)
+        
+        # calculating the initial position in the y axis
+        y = self.screen // 40
+        
+        # calculating the increment to the y axis
+        y_increment = self.screen // 20
+        
+        self.paint_text(general_score, x, y, font_20, cores.BRANCO)
+        y += y_increment
+        
+        self.paint_text(level, x, y, font_20, cores.BRANCO)
+        y += y_increment
+        
+        self.paint_text(level_pontuation, x, y, font_20, cores.BRANCO)
+        y += y_increment
+        
+        self.paint_text(attempt, x, y, font_20, cores.BRANCO)
     
+    def paint_records(self) -> None:
+        '''Method that paint the 5 biggest scores.'''
+        
+        # calculating the position in the x axis and the y axis initial positon 
+        x = self.screen - (self.screen // 10)
+        y = self.screen // 2.5
+        
+        # painting the title
+        title = 'RECORDES DE PONTUAÇÃO'
+        self.paint_text(title, x, y, font_20, cores.BRANCO)
+        
+        # getting the five biggest scores from the score manager
+        five_biggest_scores = self.score_manager.get_five_biggest_scores()
+        
+        # painting the records
+        position_y = y + y // 10
+        for key, value in five_biggest_scores.items():
+            date = key
+            text = f'{date} ... {value:5.2f} pontos'
+            
+            self.paint_text(text, 1350, position_y, font_10, cores.BRANCO)
+            position_y += y // 20

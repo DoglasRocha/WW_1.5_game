@@ -310,7 +310,7 @@ class Cenario(GameElement):
             text = f'{date} ... {value:5.2f} pontos'
             
             self.pintar_texto(text, 1350, position_y, fonte_10, cores.BRANCO)
-            position_y += 15
+            position_y += 20
             
     '''logica de niveis'''
     
