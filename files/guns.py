@@ -22,8 +22,12 @@ class Weapon(metaclass=ABCMeta):
                 
             distance = (relative_x_position**2 + relative_y_position**2)**(1/2)
             divider = distance / self.bullet_speed
-            bullet_x_speed = round(relative_x_position / divider)
-            bullet_y_speed = round(relative_y_position / divider)
+            try:
+                bullet_x_speed = round(relative_x_position / divider)
+                bullet_y_speed = round(relative_y_position / divider)
+                
+            except ZeroDivisionError:
+                bullet_x_speed, bullet_y_speed = 3, 4
                 
             self.fired_bullets.append(Bullet(current_x, current_y, 
                                             bullet_x_speed, bullet_y_speed, 

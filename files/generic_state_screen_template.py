@@ -1,3 +1,4 @@
+from back_button import BackButton
 from button import Button
 from screen_template import ScreenTemplate
 from pygame.font import SysFont
@@ -13,7 +14,8 @@ class GenericStateScreenTemplate(ScreenTemplate):
     
     
     def __init__(self, action: Callable, screen: Surface,
-                 text: str) -> None:
+                 text: str, save_pontuation: Callable,
+                 game_reseter: Callable) -> None:
         '''Special python method that constructs the class.
         
         Receives the state changer and the screen Surface'''
@@ -25,16 +27,16 @@ class GenericStateScreenTemplate(ScreenTemplate):
         initial_y = screen.get_height() // 2
         second_y = initial_y + buttons_height + 20
         
-        # instantiating the back button
-        back_button = Button(x, initial_y, buttons_width, buttons_height,
-                             action, 'MAIN MENU', screen, 'MENU',
+        # instantiating the continue button
+        continue_button = Button(x, initial_y, buttons_width, buttons_height,
+                             action, 'PLAYING', screen, 'CONTINUAR',
                              cores.BRANCO, cores.BRANCO, cores.BRANCO,
                              cores.PRETO, font_25)
         
-        # instantiating the continue button
-        continue_button = Button(x, second_y, buttons_width,
-                                 buttons_height, action, 'PLAYING',
-                                 screen, 'CONTINUAR', cores.BRANCO,
+        # instantiating the back button
+        back_button = BackButton(x, second_y, buttons_width,
+                                 buttons_height, action, 'MAIN MENU',
+                                 save_pontuation, game_reseter, screen, 'MENU', cores.BRANCO,
                                  cores.BRANCO, cores.BRANCO, cores.PRETO,
                                  font_25)
         

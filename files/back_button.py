@@ -42,6 +42,6 @@ class BackButton(Button):
         if self.has_click_inside_the_button(mouse_position[0],
                                             mouse_position[1],
                                             mouse_buttons_pressed):
-            self.save_pontuation_method()
             self.reset_game()
+            self.save_pontuation_method()
             self.state_changer(self.new_state)

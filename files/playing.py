@@ -8,13 +8,13 @@ from character import Character
 from pygame.time import Clock
 from score_manager import ScoreManager
 from game_element import GameElement
-from back_button import BackButton
+from button import Button
 from pygame.font import SysFont, Font
 from pygame.event import Event
 import pygame
 import cores
 
-font_10 = SysFont('arial', 10, True)
+font_15 = SysFont('arial', 15, True)
 font_20 = SysFont('arial', 20, True)
 
 
@@ -42,11 +42,10 @@ class Playing(GameElement):
         self.state_changer = state_changer
         self.score_manager = score_manager
         self.define_fps()
-        back_button = BackButton(10, 10, 150, 25, self.state_changer,
-                                 'PAUSED', self.score_manager.save_score,
-                                 self.reset_game,
-                                 self.screen, 'VOLTAR', cores.BRANCO, cores.BRANCO,
-                                 cores.BRANCO, cores.PRETO, font_10)
+        back_button = Button(10, 10, 150, 25, self.state_changer,
+                                 'PAUSED', self.screen, 'PAUSAR',
+                                 cores.BRANCO, cores.BRANCO,
+                                 cores.BRANCO, cores.PRETO, font_15)
         self.buttons = [back_button]
         
     '''----------------------CALCULATING THE RULES----------------------'''
@@ -74,7 +73,6 @@ class Playing(GameElement):
                     
                 # special actions to alive movables
                 if movable.state == 'ALIVE':
-                    
                     # checking if any bullet collided with a movable of a wall
                     for bullet in movable.weapon.fired_bullets:
                         self.bullet_collided_with_movable(movable, bullet)
@@ -181,21 +179,24 @@ class Playing(GameElement):
         hitbox, hits another movable. If collides, the method returns
         True'''
         
-        collides_with_movable = []
+        if isinstance(movable, Character):
         
-        for new_line, new_colunm in movable.hitbox:
-            # taking the other movables
-            for another_movable in self.movables:  
-                # checking if the other movable is not the movable
-                # analised and is not an enemy (enemies don't collide 
-                # with each other)  
-                if id(movable) != id(another_movable) \
-                        and isinstance(movable, Enemy):
-                    collides = another_movable.line == new_line \
-                               and another_movable.column == new_colunm
-                    collides_with_movable.append(collides)
-                    
-        return any(collides_with_movable)
+            collides_with_movable = []
+            
+            for new_line, new_colunm in movable.hitbox:
+                # taking the other movables
+                for another_movable in self.movables:  
+                    # checking if the other movable is not the movable
+                    # analised and is not an enemy (enemies don't collide 
+                    # with each other)  
+                    if id(movable) != id(another_movable) \
+                            and isinstance(movable, Enemy):
+                        collides = another_movable.line == new_line \
+                                and another_movable.column == new_colunm
+                        collides_with_movable.append(collides)
+                        
+            return any(collides_with_movable)
+        return False
                         
     def collides_with_anything(self, movable: Movable) -> bool:
         '''Method that checks if the movable collides with another
@@ -411,7 +412,7 @@ class Playing(GameElement):
             date = key
             text = f'{date} ... {value:5.2f} pontos'
             
-            self.paint_text(text, 1350, position_y, font_10, cores.BRANCO)
+            self.paint_text(text, 1350, position_y, font_15, cores.BRANCO)
             position_y += y // 20
             
     '''----------------------LEVEL LOGIC----------------------'''
@@ -444,8 +445,8 @@ class Playing(GameElement):
         
     def reset_game(self) -> None:
         '''Method used when the player goes to the menu'''
-        
         self.level = 1
+        self.reinit_level()
         
     def define_fps(self) -> None:
         '''Method that defines the fps (and ultimatelly, the speed

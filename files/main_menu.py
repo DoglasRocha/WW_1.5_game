@@ -68,6 +68,7 @@ class MainMenu:
 
     def trigger(self) -> None:
         '''Method that triggers the game to init'''
+        
         self.character.receive_weapon(self.gun)
         self.reset()
         self.game_state_changer('PLAYING')

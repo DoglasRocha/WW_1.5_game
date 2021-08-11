@@ -6,5 +6,8 @@ from pygame import Surface
 class Paused(GenericStateScreenTemplate):
     
     
-    def __init__(self, action: Callable, screen: Surface) -> None:
-        super().__init__(action, screen, 'P A U S A D O')
+    def __init__(self, action: Callable, screen: Surface,
+                 save_pontuation: Callable,
+                 game_reseter: Callable) -> None:
+        super().__init__(action, screen, 'P A U S A D O', 
+                         save_pontuation, game_reseter)
