@@ -21,10 +21,9 @@ class ImageLoader:
             try:
                 img = pygame.image.load(name) # loading the image
                 images[direction] = img # putting the image in the dictionary
-                breakpoint()
+                
             except FileNotFoundError:
                 return images
-            breakpoint()
         
         return images
                     

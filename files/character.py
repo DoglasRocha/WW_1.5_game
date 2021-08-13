@@ -27,7 +27,6 @@ class Character(Movable):
         self.images = ImageLoader.load_character()
 
     def paint(self) -> None:
-        print(self.images)
         if self.direction == 'SOUTH':
             image = self.images['SOUTH']
         elif self.direction == 'NORTH':
