@@ -3,6 +3,7 @@ from pygame import Surface
 import cores
 from movable import Movable
 from pygame.event import Event
+from image_loader import ImageLoader
 import pygame
 
 fonte_30 = pygame.font.SysFont('arial', 30, True)
@@ -23,9 +24,23 @@ class Character(Movable):
         self.time_passed_since_death = None
         self.time_passed = 0
         self.size = None
+        self.images = ImageLoader.load_character()
 
     def paint(self) -> None:
-        pygame.draw.rect(self.screen, cores.CIANO, (self.x, self.y, self.size, self.size))
+        print(self.images)
+        if self.direction == 'SOUTH':
+            image = self.images['SOUTH']
+        elif self.direction == 'NORTH':
+            image = self.images['NORTH']
+        elif self.direction == 'WEST':
+            image = self.images['WEST']
+        elif self.direction == 'EAST':
+            image = self.images['EAST']
+        else:
+            image = self.images['NORTH']
+            
+        image = pygame.transform.scale(image, (self.size, self.size))
+        self.screen.blit(image, (self.x, self.y))
         self.paint_hp()
         self.weapon.paint(self.size, True)
         
