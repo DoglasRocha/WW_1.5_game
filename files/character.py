@@ -27,16 +27,7 @@ class Character(Movable):
         self.images = ImageLoader.load_character()
 
     def paint(self) -> None:
-        if self.direction == 'SOUTH':
-            image = self.images['SOUTH']
-        elif self.direction == 'NORTH':
-            image = self.images['NORTH']
-        elif self.direction == 'WEST':
-            image = self.images['WEST']
-        elif self.direction == 'EAST':
-            image = self.images['EAST']
-        else:
-            image = self.images['NORTH']
+        image = self.images[self.direction]
             
         image = pygame.transform.scale(image, (self.size, self.size))
         self.screen.blit(image, (self.x, self.y))

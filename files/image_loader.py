@@ -18,13 +18,9 @@ class ImageLoader:
             # defining the name of the file
             name = f'files/img/character/{direction}.png'
             
-            try:
-                img = pygame.image.load(name) # loading the image
-                images[direction] = img # putting the image in the dictionary
+            img = pygame.image.load(name) # loading the image
+            images[direction] = img # putting the image in the dictionary
                 
-            except FileNotFoundError:
-                return images
-        
         return images
                     
              
