@@ -24,7 +24,7 @@ class Character(Movable):
         self.time_passed_since_death = None
         self.time_passed = 0
         self.size = None
-        self.images = ImageLoader.load_character()
+        self.images = ImageLoader.load_character('character')
 
     def paint(self) -> None:
         image = self.images[self.direction]
