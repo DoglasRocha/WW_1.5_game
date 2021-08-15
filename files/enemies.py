@@ -1,4 +1,5 @@
 from abc import ABCMeta
+from image_loader import ImageLoader
 from character import Character
 from movable import Movable
 from abc import ABCMeta, abstractmethod
@@ -14,16 +15,19 @@ directions = ['NORTH', 'SOUTH', 'EAST', 'WEST', 'NORTH EAST', 'NORTH WEST', 'SOU
 class Enemy(Movable, metaclass=ABCMeta):
     
     
-    @abstractmethod
     def paint(self) -> None:
-        pass
+        image = self.images[self.direction]
+            
+        image = pygame.transform.scale(image, (self.size, self.size))
+        self.screen.blit(image, (self.x, self.y))
+        self.weapon.paint(self.size)
     
     def process_events(self) -> None:
         if self.has_the_time_to_walk_passed():
-            direction = choice(directions) if len(self.directions) <= 0 \
+            self.direction = choice(directions) if len(self.directions) <= 0 \
             else choice(self.directions)
                 
-            self.walk(direction)
+            self.walk(self.direction)
             self.time_passed_since_walk = time()
             
         if self.has_the_time_to_shoot_passed():
@@ -59,6 +63,7 @@ class Enemy(Movable, metaclass=ABCMeta):
         
 class Recruit(Enemy, Movable):
     
+    
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 1
         self.x_speed = 0
@@ -79,17 +84,10 @@ class Recruit(Enemy, Movable):
         self.reward = 10
         self.time_passed = 0
         self.directions = []
-    
-    def paint(self) -> None:
-        if self.state == 'ALIVE':
-            self.alive_painting()
-        
-    def alive_painting(self) -> None:
-        pygame.draw.rect(self.screen, cores.AMARELO_ESVERDEADO, (self.x, self.y, self.size, self.size))
-        self.weapon.paint(self.size)
-
+        self.images = ImageLoader.load_images('recruit')
 
 class Soldier(Enemy, Movable):
+    
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 2
@@ -111,17 +109,11 @@ class Soldier(Enemy, Movable):
         self.reward = 25
         self.time_passed = 0
         self.directions = []
-    
-    def paint(self) -> None:
-        if self.state == 'ALIVE':
-            self.alive_painting()
-        
-    def alive_painting(self) -> None:
-        pygame.draw.rect(self.screen, cores.VERDE_LIMAO, (self.x, self.y, self.size, self.size))
-        self.weapon.paint(self.size)
+        self.images = ImageLoader.load_images('soldier')
         
         
 class Captain(Enemy, Movable):
+    
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 1
@@ -143,17 +135,11 @@ class Captain(Enemy, Movable):
         self.reward = 50
         self.time_passed = 0
         self.directions = []
-    
-    def paint(self) -> None:
-        if self.state == 'ALIVE':
-            self.alive_painting()
-        
-    def alive_painting(self) -> None:
-        pygame.draw.rect(self.screen, cores.VERDE_ESCURO, (self.x, self.y, self.size, self.size))
-        self.weapon.paint(self.size)
+        self.images = ImageLoader.load_images('captain')
         
         
 class General(Enemy, Movable):
+    
     
     def __init__(self, screen: Surface, character: Character):
         self.SPEED = 2
@@ -175,11 +161,5 @@ class General(Enemy, Movable):
         self.reward = 200
         self.time_passed = 0
         self.directions = []
-    
-    def paint(self) -> None:
-        if self.state == 'ALIVE':
-            self.alive_painting()
+        self.images = ImageLoader.load_images('general')
         
-    def alive_painting(self) -> None:
-        pygame.draw.rect(self.screen, cores.DOURADO, (self.x, self.y, self.size, self.size))
-        self.weapon.paint(self.size)
