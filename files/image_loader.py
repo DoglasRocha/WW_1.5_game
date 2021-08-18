@@ -31,7 +31,7 @@ class ImageLoader:
         Returns a dict with the images loaded and ready to be blitted.'''
         
         # tuple that holds all the names of the little blocks of the scenary
-        blocks = ('grass', 'path', 'scenary_limit') 
+        blocks = ('grass', 'path', 'scenary_limit', 'stone_path',) 
         
         images = {}
         
