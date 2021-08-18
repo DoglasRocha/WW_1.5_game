@@ -1,3 +1,4 @@
+from image_loader import ImageLoader
 from enemies import Captain, Enemy, General, Recruit, Soldier
 from bullet import Bullet
 from movable import Movable
@@ -42,6 +43,7 @@ class Playing(GameElement):
         self.state_changer = state_changer
         self.score_manager = score_manager
         self.define_fps()
+        self.images = ImageLoader.load_scenary()
         back_button = Button(10, 10, 150, 25, self.state_changer,
                                  'PAUSED', self.screen, 'PAUSAR',
                                  cores.BRANCO, cores.BRANCO,
@@ -345,7 +347,8 @@ class Playing(GameElement):
             y = line_number * self.size
             
             # process to know the color of the square
-            all_colors = {0: cores.VERDE, 1: cores.BRANCO, 2: cores.AMARELO,
+            all_colors = {0: self.images['grass'], 1: self.images['path'], 
+                          2: self.images['scenary_limit'],
                           3: cores.CINZA, 4: cores.CINZA_ESCURO, 5: cores.LARANJA,
                           6: cores.MARROM_ESCURO, 7: cores.MARROM_CLARO, 8: cores.PRATA,
                           9: cores.LARANJA_FEIO, 10: cores.AZUL_ACO, 11: cores.VERMELHO,
@@ -353,8 +356,12 @@ class Playing(GameElement):
             
             color = all_colors[column]
             
-            # painting the square
-            pygame.draw.rect(self.screen, color, (x, y, self.size, self.size))
+            if type(color) != tuple:
+                image = pygame.transform.scale(color, (self.size, self.size))
+                self.screen.blit(image, (x, y))
+            else:
+                # painting the square
+                pygame.draw.rect(self.screen, color, (x, y, self.size, self.size))
             
     def paint_side_bar(self) -> None:
         '''Method that paints the side bar, which contains the pontuation,

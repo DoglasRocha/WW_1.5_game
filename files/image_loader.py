@@ -2,21 +2,20 @@ import pygame
 
 class ImageLoader:
     
-    directions = ['NORTH','SOUTH','EAST','WEST',
-                  'NORTH WEST', 'NORTH EAST',
-                  'SOUTH WEST', 'SOUTH EAST']
     
     @staticmethod
     def load_images(movable_type: str) -> dict:
         '''Method that load all the images of the thing specified.
         
         Receives the name of the movable in lowercase.'''
+        # all possible directions
+        directions = ('NORTH','SOUTH','EAST','WEST',
+                  'NORTH WEST', 'NORTH EAST',
+                  'SOUTH WEST', 'SOUTH EAST')
+        
         images = {}
         
-        for i in range(8):
-            # saving the name to attribute in the dict
-            direction = ImageLoader.directions[i]
-            
+        for direction in directions:
             # defining the name of the file
             name = f'files/img/{movable_type}/{direction}.png'
             
@@ -25,6 +24,22 @@ class ImageLoader:
                 
         return images
     
-                    
-             
+    @staticmethod
+    def load_scenary() -> dict:
+        '''Method that loads all the little blocks that compose the scenary. 
+        
+        Returns a dict with the images loaded and ready to be blitted.'''
+        
+        # tuple that holds all the names of the little blocks of the scenary
+        blocks = ('grass', 'path', 'scenary_limit') 
+        
+        images = {}
+        
+        for block_name in blocks:
+            name = f'files/img/scenary/{block_name}.png'
             
+            img = pygame.image.load(name)
+            images[block_name] = img
+
+        return images 
+                                        
