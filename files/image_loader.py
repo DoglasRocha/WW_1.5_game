@@ -32,7 +32,8 @@ class ImageLoader:
         
         # tuple that holds all the names of the little blocks of the scenary
         blocks = ('grass', 'path', 'scenary_limit', 'stone_path',
-                  'high_fence', 'spawn_wall', 'heavy_mud') 
+                  'high_fence', 'spawn_wall', 'heavy_mud',
+                  'light_mud',) 
         
         images = {}
         
