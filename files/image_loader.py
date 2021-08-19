@@ -34,7 +34,7 @@ class ImageLoader:
         blocks = ('grass', 'path', 'scenary_limit', 'stone_path',
                   'high_fence', 'spawn_wall', 'heavy_mud',
                   'light_mud', 'barbwire', 'bad_wall', 'bullets',
-                  'heart') 
+                  'heart', 'trench') 
         
         images = {}
         

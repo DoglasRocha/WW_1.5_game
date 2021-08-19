@@ -353,7 +353,7 @@ class Playing(GameElement):
                           6: self.images['heavy_mud'], 7: self.images['light_mud'], 
                           8: self.images['barbwire'], 9: self.images['bad_wall'], 
                           10: self.images['bullets'], 11: self.images['heart'],
-                          12: cores.MARROM_FEIO}
+                          12: self.images['trench']}
             
             color = all_colors[column]
             
