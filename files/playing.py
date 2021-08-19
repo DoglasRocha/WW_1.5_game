@@ -349,7 +349,7 @@ class Playing(GameElement):
             # process to know the color of the square
             all_colors = {0: self.images['grass'], 1: self.images['path'], 
                           2: self.images['scenary_limit'], 3: self.images['stone_path'], 
-                          4: cores.CINZA_ESCURO, 5: cores.LARANJA,
+                          4: self.images['high_fence'], 5: self.images['spawn_wall'],
                           6: cores.MARROM_ESCURO, 7: cores.MARROM_CLARO, 8: cores.PRATA,
                           9: cores.LARANJA_FEIO, 10: cores.AZUL_ACO, 11: cores.VERMELHO,
                           12: cores.MARROM_FEIO}
