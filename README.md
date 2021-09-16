@@ -24,15 +24,27 @@
 
 * Também é necessário instalar o Python em sua máquina, de preferência da versão 3.8.10 para frente.
 
-* Aém disso, é necessário instalar o Pygame
+* Além disso, é necessário instalar o Pygame, que pode ser feito digitando:
 
-* Depois, caso esteja em um Linux, digite:
+  ```shell
+  pip install -r requirements.txt
+  ```
+
+* Depois, caso esteja em um Linux, digite para jogar o jogo:
 
   ```shell
   ./run_game.sh
   ```
   
-* Caso esteja em um Windows, di
+* Caso esteja em um Windows, digite:
+
+  ```powershell
+  python files/main.py
+  ```
+
+* E pronto, você já poderá jogar o WW 1.5 Game!
+
+* Futuras atualizações podem acontecer!
 
 * Imagem do jogo:
 
