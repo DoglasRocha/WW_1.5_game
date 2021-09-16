@@ -48,6 +48,6 @@
 
 * Imagem do jogo:
 
-  <img href="img/game_screenshot.png" alt="Game Screenshot">
+  <img src="img/game_screenshot.png" alt="Game Screenshot">
 
 > Divirta-se! :)
