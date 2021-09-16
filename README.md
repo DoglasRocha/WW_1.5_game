@@ -24,6 +24,8 @@
 
 * Também é necessário instalar o Python em sua máquina, de preferência da versão 3.8.10 para frente.
 
+* Você pode encontrar um tutorial de instalação do Python <a href="https://tutorial.djangogirls.org/pt/python_installation/" target="_blank">aqui, em português,</a> e <a href="https://realpython.com/installing-python/" target="_blank">aqui, em inglês</a>.
+
 * Além disso, é necessário instalar o Pygame, que pode ser feito digitando:
 
   ```shell
