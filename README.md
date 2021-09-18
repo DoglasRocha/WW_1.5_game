@@ -1,11 +1,8 @@
 # World War 1.5 :bomb::gun:
 
 * Olá, seja bem vindo ao meu jogo! :video_game:
-
 * Ele é feito para praticar a linguagem Python, utilizando a biblioteca Pygame. :computer:
-
 * Ele é ambientado entre a WWI e a WWII.
-
 * Para jogar, utilize as teclas:
 
   * W: para ir para frente :arrow_up:
@@ -14,13 +11,21 @@
   * D: para ir para direita :arrow_right:
   * clique: para atirar :boom:
   * Esc: para pausar :pause_button:
-
 * Seu objetivo é passar todos os 10 níveis, havendo muitos inimigos no caminho.
+* Você pode <a href="#online">jogá-lo online</a> (não recomendado) e pode <a href="#instalando">instalá-lo</a> em sua máquina.
 
-* Para instalar o jogo, vá em sua linha de comando, se direcione à pasta de sua preferência e digite:
+## <span id="online">Jogando online</span>
+
+* Para jogar o game online é muito simples, basta vir neste <a href="https://replit.com/@DoglasRocha/WW15game#.replit" target="_blank">link</a> e clicar em "Run", na parte superior da tela.
+* Jogar o jogo desta forma não é recomendável, pois a taxa de frames do Replit é muito baixa, o que faz com que o jogo tenha algumas distorções indesejadas.
+
+## <span id="instalando">Instalando o game</span>
+
+*  Para instalar o jogo, vá em sua linha de comando, se direcione à pasta de sua preferência e digite:
 
   ```shell
   git clone https://github.com/DoglasRocha/WW_1.5_game.git
+  ```
 
 * Também é necessário instalar o Python em sua máquina, de preferência da versão 3.8.10 para frente.
 
